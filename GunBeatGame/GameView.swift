@@ -23,6 +23,11 @@ struct GameView: View {
         }.onAppear() //todo: add more ui elements
         {
             //Actual game logic goes here
+            
+            var unspawnedBubbles = {
+                Bubble(targetBeatTime : 3.0, speedInScreensPerBeat : 0.5)
+            }
+            
             var gameTimer = Timer.scheduledTimer(withTimeInterval: 1.0/30.0, repeats: true) { gameTimer in
                 //THINGS THAT HAPPEN EVERY FRAME GO HERE
                 self.timePassed += 1.0/30.0
@@ -33,15 +38,20 @@ struct GameView: View {
 }
 
 class Bubble {
-    var TargetBeatNumber : Int // The number of beat at which the bubble should arrive next to the barrel
-    var BeatDelay : Double // Offset from TargetBeatNumber (for half a beat later, make this 0.5)
-    init(targetBeatNumber : Int, beatDelay : Double)
+    var TargetBeatTime : Double // The number of beat at which the bubble should line up with the barrel
+        //NOTE: the length of each beat varies from song to song and will be stored in the parent
+        //EXAMPLE: 3.5 = 3 and a half beats after the song starts
+    var SpeedInScreensPerBeat : Double
+    init(targetBeatTime : Double, speedInScreensPerBeat : Double) // Constructor
+    {
+        TargetBeatTime = targetBeatTime
+        SpeedInScreensPerBeat = speedInScreensPerBeat
+    }
+    func getVerticalOffsetFromBarrel(currentBeatTime : Double)
     {
         
     }
-    //bubble code goes here:
-    // - variable boolean to check if bubble has been hit yet
-    // - construtor to create the bubble code
+    //bubble code goes here:§
     // - function to calculate the time at which the bubble should be spawned offscreen (and begin moving)
     // - function to move the bubble, which will be called each frame by the timer if the bubble is spawned
     // - function to handle bubble being destroyed
