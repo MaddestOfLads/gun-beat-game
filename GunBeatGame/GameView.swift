@@ -9,7 +9,11 @@ import SwiftUI
 
 
 struct GameView: View {
-    @State var timePassed : Double = 0.0
+    
+    @State var gameTime : Double = 0.0
+    @State var beatTime : Double = 0.0
+    var FPS : Double = 30.0
+    var BPM : Double = 120.0 //Beats per minute; will depend on song
     
     var body: some View {
         GeometryReader{geometry in
@@ -25,37 +29,46 @@ struct GameView: View {
             //Actual game logic goes here
             
             var unspawnedBubbles = {
-                Bubble(targetBeatTime : 3.0, speedInScreensPerBeat : 0.5)
+                Bubble(targetBeat : 3.0, speedInScreensPerBeat : 0.5)
             }
             
+            self.beatTime = self.gameTime
             var gameTimer = Timer.scheduledTimer(withTimeInterval: 1.0/30.0, repeats: true) { gameTimer in
                 //THINGS THAT HAPPEN EVERY FRAME GO HERE
-                self.timePassed += 1.0/30.0
-                print(self.timePassed)
+                self.gameTime += 1.0/self.FPS
+                self.beatTime += 1.0/BPM*60.0
+                print(self.gameTime)
             }
         }
     }
 }
 
 class Bubble {
-    var TargetBeatTime : Double // The number of beat at which the bubble should line up with the barrel
+    let SPAWN_SCREEN_OFFSET : Double = 1.0 // How many screens above the barrel the button should spawn
+    
+    let BUBBLE_WIDTH : Double = 0.1
+    let BUBBLE_HEIGHT : Double = 0.05
+    
+    var TargetBeat : Double // The number of beat at which the bubble should line up with the barrel
         //NOTE: the length of each beat varies from song to song and will be stored in the parent
         //EXAMPLE: 3.5 = 3 and a half beats after the song starts
+    
     var SpeedInScreensPerBeat : Double
-    init(targetBeatTime : Double, speedInScreensPerBeat : Double) // Constructor
+    
+    var SpawnBeat : Double
+    
+    init(targetBeat : Double, speedInScreensPerBeat : Double) // Constructor
     {
-        TargetBeatTime = targetBeatTime
+        TargetBeat = targetBeat
         SpeedInScreensPerBeat = speedInScreensPerBeat
+        SpawnBeat = targetBeat - SPAWN_SCREEN_OFFSET / speedInScreensPerBeat
     }
-    func getVerticalOffsetFromBarrel(currentBeatTime : Double)
+    
+    func getPos(beatTime : Double)
     {
         
     }
-    //bubble code goes here:§
-    // - function to calculate the time at which the bubble should be spawned offscreen (and begin moving)
-    // - function to move the bubble, which will be called each frame by the timer if the bubble is spawned
-    // - function to handle bubble being destroyed
-    // - function to handle bubble hitting the end of the screen
+    
 }
 
 #Preview {
