@@ -10,10 +10,15 @@ import SwiftUI
 
 struct GameView: View {
     
-    @State var gameTime : Double = 0.0
-    @State var beatTime : Double = 0.0
     var FPS : Double = 30.0
     var BPM : Double = 120.0 //Beats per minute; will depend on song
+    
+    @State var gameTime : Double = 0.0 //Time measured in seconds
+    @State var beatTime : Double = 0.0 //Time measured in beats that elapsed since the song started
+
+    @State var preloadedBubbles = Array<Bubble>();
+    @State var spawnedBubbles = Array<Bubble>();
+    @State var hitBubbles = Array<Bubble>();
     
     var body: some View {
         GeometryReader{geometry in
@@ -28,30 +33,40 @@ struct GameView: View {
         {
             //Actual game logic goes here
             
-            var unspawnedBubbles = {
-                Bubble(targetBeat : 3.0, speedInScreensPerBeat : 0.5)
-            }
-            
             self.beatTime = self.gameTime
-            var gameTimer = Timer.scheduledTimer(withTimeInterval: 1.0/30.0, repeats: true) { gameTimer in
-                //THINGS THAT HAPPEN EVERY FRAME GO HERE
-                self.gameTime += 1.0/self.FPS
-                self.beatTime += 1.0/BPM*60.0
+            var gameTimer = Timer.scheduledTimer(withTimeInterval: 1.0/self.FPS, repeats: true) { gameTimer in
+                //Progress timers
+                self.gameTime += 1.0 / self.FPS
+                self.beatTime += 60.0 / BPM
+                
+                
                 print(self.gameTime)
             }
         }
+
+    }
+    func preloadBubbles()
+    //Triggered before the song starts, creating the bubble objects without spawning them
+    {
+        self.preloadedBubbles.append(Bubble(targetBeat : 3.0, speedInScreensPerBeat : 0.5))
+    }
+    func spawnbubbles()
+    //Triggered every frame, determining which bubbles should be spawned and spawning them
+    {
+        
     }
 }
 
 class Bubble {
     let SPAWN_SCREEN_OFFSET : Double = 1.0 // How many screens above the barrel the button should spawn
     
-    let BUBBLE_WIDTH : Double = 0.1
-    let BUBBLE_HEIGHT : Double = 0.05
+    let WIDTH : Double = 0.1
+    let HEIGHT : Double = 0.05
     
-    var TargetBeat : Double // The number of beat at which the bubble should line up with the barrel
-        //NOTE: the length of each beat varies from song to song and will be stored in the parent
-        //EXAMPLE: 3.5 = 3 and a half beats after the song starts
+    var TargetBeat : Double
+        // The number of beat at which the bubble should line up with the barrel
+        // NOTE: the length of each beat varies from song to song and will be stored in the parent
+        // EXAMPLE: 3.5 = 3 and a half beats after the song starts
     
     var SpeedInScreensPerBeat : Double
     
@@ -64,11 +79,10 @@ class Bubble {
         SpawnBeat = targetBeat - SPAWN_SCREEN_OFFSET / speedInScreensPerBeat
     }
     
-    func getPos(beatTime : Double)
+    func getVerticalPos(beatTime : Double) -> Double //Returns what position the bubble SHOULD be at during the given beatTime.
     {
-        
+        return (beatTime - TargetBeat) * SpeedInScreensPerBeat
     }
-    
 }
 
 #Preview {
