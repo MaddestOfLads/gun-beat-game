@@ -10,58 +10,74 @@ import SwiftUI
 
 struct GameView: View {
     
-    var FPS : Double = 30.0
+    var FPS : Double = 60.0
     var BPM : Double = 120.0 //Beats per minute; will depend on song
     
-    @State var gameTime : Double = 0.0 //Time measured in seconds
-    @State var beatTime : Double = 0.0 //Time measured in beats that elapsed since the song started
+    @State var Time : Double = 0.0 //Time measured in seconds
+    @State var Beat : Double = 0.0 //Time measured in beats that elapsed since the song started
+        //For example: If BPM is 120, and 1.2 seconds have passed since the song started, then Time is 1.2 and Beat is 2.4
 
     @State var preloadedBubbles = Array<Bubble>();
     @State var spawnedBubbles = Array<Bubble>();
     @State var hitBubbles = Array<Bubble>();
     
     var body: some View {
-        GeometryReader{geometry in
-            Button("Gun") {
-                print("fire")
-            }.frame(width:geometry.size.width * 0.3, height: geometry.size.height*0.2)
-            .background(Color.blue)
-            .foregroundColor(Color.red)
-            .cornerRadius(8)
-            .position(x: geometry.size.width * 0.7, y : geometry.size.height * 0.7)
-        }.onAppear() //todo: add more ui elements
-        {
-            //Actual game logic goes here
-            
-            self.beatTime = self.gameTime
-            var gameTimer = Timer.scheduledTimer(withTimeInterval: 1.0/self.FPS, repeats: true) { gameTimer in
-                //Progress timers
-                self.gameTime += 1.0 / self.FPS
-                self.beatTime += 60.0 / BPM
-                
-                
-                print(self.gameTime)
+        TimelineView(.periodic(from: .now, by: 1/FPS)) {timeline in
+            //TODO: figure out this timelineview bullshit
+            ZStack  {
+                //TODO: add Canvas to ZStack for regularly updating elements
+                GeometryReader{geometry in //GeometryReader used for static / UI elements
+                    Button("Gun") {
+                        print("fired")
+                    }.frame(width:geometry.size.width * 0.3, height: geometry.size.height*0.2)
+                        .background(Color.blue)
+                        .foregroundColor(Color.red)
+                        .cornerRadius(8)
+                        .position(x: geometry.size.width * 0.7, y : geometry.size.height * 0.7)
+                }.onAppear()
+                {
+                    startGame()
+                }
             }
         }
-
     }
-    func preloadBubbles()
-    //Triggered before the song starts, creating the bubble objects without spawning them
+    func startGame() //Triggers on song start / restart
     {
-        self.preloadedBubbles.append(Bubble(targetBeat : 3.0, speedInScreensPerBeat : 0.5))
+        preloadBubbles()
+        Beat = Time
+        var gameTimer = Timer.scheduledTimer(withTimeInterval: 1.0/self.FPS, repeats: true) { gameTimer in
+            //TODO: replace Timer with TimelineView
+            physicsProcess()
+        }
     }
-    func spawnbubbles()
-    //Triggered every frame, determining which bubbles should be spawned and spawning them
+    func physicsProcess() //Triggers every frame
     {
-        
+        Time += 1.0 / FPS
+        Beat += 60.0 / BPM
+        print(Beat)
+    }
+    func preloadBubbles() //Creates all bubble objects before the song plays
+    {
+        preloadedBubbles.append(Bubble(targetBeat : 3.0, speedInScreensPerBeat : 0.5))
+    }
+    func spawnbubbles() //Spawns and draws bubble objects that are about to appear on screen
+    {
+        for bubble in preloadedBubbles
+        {
+            if(bubble.SpawnBeat < Beat)
+            {
+                bubble.spawn()
+            }
+        }
     }
 }
 
 class Bubble {
-    let SPAWN_SCREEN_OFFSET : Double = 1.0 // How many screens above the barrel the button should spawn
+    let SPAWN_SCREEN_OFFSET : Double = 1.5 // How many screens above the barrel the button should spawn
     
     let WIDTH : Double = 0.1
     let HEIGHT : Double = 0.05
+        // Bubble dimensions on screen
     
     var TargetBeat : Double
         // The number of beat at which the bubble should line up with the barrel
@@ -69,19 +85,25 @@ class Bubble {
         // EXAMPLE: 3.5 = 3 and a half beats after the song starts
     
     var SpeedInScreensPerBeat : Double
-    
     var SpawnBeat : Double
+    var PosAboveBarrel : Double
     
     init(targetBeat : Double, speedInScreensPerBeat : Double) // Constructor
     {
         TargetBeat = targetBeat
         SpeedInScreensPerBeat = speedInScreensPerBeat
         SpawnBeat = targetBeat - SPAWN_SCREEN_OFFSET / speedInScreensPerBeat
+        PosAboveBarrel = SPAWN_SCREEN_OFFSET
     }
     
-    func getVerticalPos(beatTime : Double) -> Double //Returns what position the bubble SHOULD be at during the given beatTime.
+    func spawn() // Creates a rectangle to represent this button
     {
-        return (beatTime - TargetBeat) * SpeedInScreensPerBeat
+        
+    }
+    
+    func updatePos(beatTime : Double) // Updates position of spawned bubbles
+    {
+        PosAboveBarrel = (beatTime - TargetBeat) * SpeedInScreensPerBeat
     }
 }
 
