@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-@main
+
 struct GunBeatGameApp: App {
     var body: some Scene {
         WindowGroup {
