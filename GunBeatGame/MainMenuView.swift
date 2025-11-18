@@ -1,4 +1,4 @@
-//
+/*
 //  MainMenuView.swift
 //  GunBeatGame
 //
@@ -6,4 +6,4 @@
 //
 
 import SwiftUI
-
+*/
