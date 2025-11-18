@@ -51,6 +51,9 @@ struct GameView: View {
 		.onAppear
 		{
 			physicsProcess()
+            spawnedBubbles.ForEach {
+                $0.draw()
+            }
 		}
     }
     func startGame() //Triggers on song start / restart
@@ -61,9 +64,14 @@ struct GameView: View {
     }
     func physicsProcess() //Triggers every frame
     {
-        time += 1.0 / FPS
-        beat = time * 60.0 / BPM
+        val dt = 1.0 / FPS
+        val db = 60.0 / BPM
+        time += dt
+        beat += db
 		spawnBubbles()
+        spawnedBubbles.ForEach {
+            $0.physicsProcess(1.0 / FPS, time * 60.0 / BPM);
+        }
         print(Beat)
     }
     func preloadBubbles() //Creates all bubble objects before the song plays
@@ -89,13 +97,14 @@ struct GameView: View {
 	}
 }
 
-class Bubble {
-    let SPAWN_SCREEN_OFFSET : Double = 1.5 // How many screens above the barrel the button should spawn (above 1 = offscreen)
+class Bubble : renderableBody2D, physicsBody{
     
-    let WIDTH : Double = 0.1
-    let HEIGHT : Double = 0.05
-        // Bubble dimensions on screen
-    
+    var width : CGFLoat = 0.1
+    var height : CGFLoat = 0.05
+    var pos : CGPoint = (0.35, -0.5)
+        // (0, 0) is top left, (1, 1) is bottom right
+    var color : Color = Color.blue
+
     var TargetBeat : Double
         // The number of beat at which the bubble should line up with the barrel
         // NOTE: the length of each beat varies from song to song and will be stored in the parent
@@ -104,23 +113,46 @@ class Bubble {
     var SpeedInScreensPerBeat : Double
     var SpawnBeat : Double
 		//The beat at which the bubble should be spawned
-    var PosAboveBarrel : Double
-		//Vertical position. Positive = bubble is above barrel, negative = bubble is below barrel
     
     init(targetBeat : Double, speedInScreensPerBeat : Double) // Constructor
     {
         TargetBeat = targetBeat
         SpeedInScreensPerBeat = speedInScreensPerBeat
         SpawnBeat = targetBeat - SPAWN_SCREEN_OFFSET / speedInScreensPerBeat
-        PosAboveBarrel = SPAWN_SCREEN_OFFSET
     }
-    
-    func updatePos(beatTime : Double) // Updates position of spawned bubbles
+    func physicsProcess(dt : Double, db : Double) //Makes the bubble move itself; should be called once per frame
     {
-        PosAboveBarrel = (beatTime - TargetBeat) * SpeedInScreensPerBeat
+        y -= db * SpeedInScreensPerBeat
+        //todo: despawn if y == 1 (aka reaches end of track)
+        //todo: despawn if shot (somehow)
     }
+    func draw() -> some View { //Makes the bubble render itself on screen; should be called after each PhysicsProcess
+        GeometryReader{geo in
+        Rectangle()
+            .fill(color)
+            .frame(width: width * geo.size.width, height: height * geo.size.height)
+            .position(x: pos.x * geo.size.width, pos.y * geo.size.height)
+        }
+    }
+
 }
 
 #Preview {
     GameView()
+}
+
+protocol body2D
+{
+    var pos : CGPoint {get; set;}
+    var screenPos : CGPoint {get => CGPoint(pos.x * geo.size.width, pos.y * geo.size.height)}
+}
+
+protocol physicsBody
+{
+    func physicsProcess(dt : Double, db : Double)
+}
+
+protocol renderableBody2D : body2D
+{
+    func draw() -> some View
 }
