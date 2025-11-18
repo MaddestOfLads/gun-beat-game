@@ -9,72 +9,52 @@ import SwiftUI
 
 
 struct GameView: View {
-    
     var FPS : Double = 60.0
     var BPM : Double = 120.0 //Beats per minute; will depend on song
 
-    var time : Double = 0.0 //Time measured in seconds
-    var beat : Double = 0.0 //Time measured in beats that elapsed since the song started
+    @State var time : Double = 0.0 //Time measured in seconds
+    @State var beat : Double = 0.0 //Time measured in beats that elapsed since the song started
         //For example: If BPM is 120, and 1.2 seconds have passed since the song started, then Time is 1.2 and Beat is 2.4
 
-    var preloadedBubbles: [Bubble] = [];
-    var spawnedBubbles : [Bubble] = [];
-    var hitBubbles : [Bubble] = [];
+    @State var preloadedBubbles: [Bubble] = [];
+    @State var spawnedBubbles : [Bubble] = [];
+    @State var hitBubbles : [Bubble] = [];
     
     var body: some View {
-        TimelineView(.periodic(from: .now, by: 1/FPS)) {timeline in
+        GeometryReader{geo in
             ZStack  {
-                GeometryReader{geometry in
-					//Rendering goes here
-					ForEach(spawnedBubbles) { bubble in
-						Rectangle()
-						.fill(Color.blue)
-						.frame(
-							width: geometry.size.width * CGFLoat(bubble.WIDTH),
-							height: geometry.size.height * CGFLoat(bubble.HEIGHT)
-						)
-						.position(
-							x: geometry.size.width * 0.35,
-							y: geometry.size.height * 0.2 - CGFLoat(bubble.PosAboveBarrel)
-						)
-					}
-                    Button("Gun") {
-                        fireGun()
-                    }.frame(width:geometry.size.width * 0.3, height: geometry.size.height*0.2)
-                        .background(Color.blue)
-                        .foregroundColor(Color.red)
-                        .cornerRadius(8)
-                        .position(x: geometry.size.width * 0.7, y : geometry.size.height * 0.7)
-				}
+                ForEach(spawnedBubbles.indices, id: \.self) {i in
+                    spawnedBubbles[i].draw(in: geo.size)
+                }
+                Button("Gun") {
+                    fireGun()
+                }.frame(width:geo.size.width * 0.3, height: geo.size.height*0.2)
+                    .background(Color.blue)
+                    .foregroundColor(Color.red)
+                    .cornerRadius(8)
+                    .position(x: geo.size.width * 0.7, y : geo.size.height * 0.7)
             }
         }
-		.onAppear
-		{
-			physicsProcess()
-            spawnedBubbles.ForEach {
-                $0.draw()
-            }
-		}
     }
-    func startGame() //Triggers on song start / restart
+    mutating func startGame() //Triggers on song start / restart
     {
         preloadBubbles()
-		beat = 0.0;
-		time = 0.0;
+        beat = 0.0
+		time = 0.0
     }
-    func physicsProcess() //Triggers every frame
+    mutating func physicsProcess() //Triggers every frame
     {
-        val dt = 1.0 / FPS
-        val db = 60.0 / BPM
+        var dt = 1.0 / FPS
+        var db = 60.0 / BPM
         time += dt
         beat += db
 		spawnBubbles()
-        spawnedBubbles.ForEach {
-            $0.physicsProcess(1.0 / FPS, time * 60.0 / BPM);
+        for bubble in spawnedBubbles{
+            bubble.physicsProcess(dt: dt, db: db);
         }
-        print(Beat)
+        print(beat)
     }
-    func preloadBubbles() //Creates all bubble objects before the song plays
+    mutating func preloadBubbles() //Creates all bubble objects before the song plays
     {
 		//TODO: put more bubbles here ig
         preloadedBubbles.append(Bubble(targetBeat : 3.0, speedInScreensPerBeat : 0.5))
@@ -82,12 +62,12 @@ struct GameView: View {
         preloadedBubbles.append(Bubble(targetBeat : 6.0, speedInScreensPerBeat : 0.5))
         preloadedBubbles.append(Bubble(targetBeat : 8.0, speedInScreensPerBeat : 0.5))
     }
-	func spawnBubbles() { //Spawns all bubbles if their spawn time has arrived 
+	mutating func spawnBubbles() { //Spawns all bubbles if their spawn time has arrived
 		for i in (0..<preloadedBubbles.count).reversed() { //From last to first bc removing array elements moves the remaining ones'
 			let bubble = preloadedBubbles[i]
 			if bubble.SpawnBeat < beat {
 				spawnedBubbles.append(bubble)
-				preloadedBubbles.remove(at: index)
+				preloadedBubbles.remove(at: i)
 			}
 		}
 	}
@@ -97,11 +77,11 @@ struct GameView: View {
 	}
 }
 
-class Bubble : renderableBody2D, physicsBody{
+class Bubble{
     
-    var width : CGFLoat = 0.1
-    var height : CGFLoat = 0.05
-    var pos : CGPoint = (0.35, -0.5)
+    var width : CGFloat = 0.1
+    var height : CGFloat = 0.05
+    var pos : CGPoint = CGPoint(x: 0.35, y: -0.5)
         // (0, 0) is top left, (1, 1) is bottom right
     var color : Color = Color.blue
 
@@ -118,41 +98,22 @@ class Bubble : renderableBody2D, physicsBody{
     {
         TargetBeat = targetBeat
         SpeedInScreensPerBeat = speedInScreensPerBeat
-        SpawnBeat = targetBeat - SPAWN_SCREEN_OFFSET / speedInScreensPerBeat
+        SpawnBeat = targetBeat - pos.y / speedInScreensPerBeat
     }
     func physicsProcess(dt : Double, db : Double) //Makes the bubble move itself; should be called once per frame
     {
-        y -= db * SpeedInScreensPerBeat
+        pos.y -= db * SpeedInScreensPerBeat
         //todo: despawn if y == 1 (aka reaches end of track)
         //todo: despawn if shot (somehow)
     }
-    func draw() -> some View { //Makes the bubble render itself on screen; should be called after each PhysicsProcess
-        GeometryReader{geo in
-        Rectangle()
+    func draw(in size: CGSize) -> some View { //Makes the bubble return itself as a shape
+        return Rectangle()
             .fill(color)
-            .frame(width: width * geo.size.width, height: height * geo.size.height)
-            .position(x: pos.x * geo.size.width, pos.y * geo.size.height)
-        }
+            .frame(width: width * size.width, height: height * size.height)
+            .position(x: pos.x * size.width, y: pos.y * size.height)
     }
-
 }
 
 #Preview {
     GameView()
-}
-
-protocol body2D
-{
-    var pos : CGPoint {get; set;}
-    var screenPos : CGPoint {get => CGPoint(pos.x * geo.size.width, pos.y * geo.size.height)}
-}
-
-protocol physicsBody
-{
-    func physicsProcess(dt : Double, db : Double)
-}
-
-protocol renderableBody2D : body2D
-{
-    func draw() -> some View
 }
