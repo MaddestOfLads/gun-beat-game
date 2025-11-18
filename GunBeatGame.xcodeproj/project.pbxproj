@@ -29,41 +29,10 @@
 		A1048AC02E9EA74C003508CD /* GunBeatGameUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GunBeatGameUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		3003AE0C2ECA126B005F75BE /* Exceptions for "GunBeatGame" folder in "GunBeatGame" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				GunBeatGameTests.swift,
-			);
-			target = A1048AA82E9EA747003508CD /* GunBeatGame */;
-		};
-		3003AE0D2ECA126B005F75BE /* Exceptions for "GunBeatGame" folder in "GunBeatGameTests" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				GunBeatGameTests.swift,
-			);
-			target = A1048AB52E9EA74C003508CD /* GunBeatGameTests */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		A1048AAB2E9EA747003508CD /* GunBeatGame */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				3003AE0C2ECA126B005F75BE /* Exceptions for "GunBeatGame" folder in "GunBeatGame" target */,
-				3003AE0D2ECA126B005F75BE /* Exceptions for "GunBeatGame" folder in "GunBeatGameTests" target */,
-			);
 			path = GunBeatGame;
-			sourceTree = "<group>";
-		};
-		A1048AB92E9EA74C003508CD /* GunBeatGameTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = GunBeatGameTests;
-			sourceTree = "<group>";
-		};
-		A1048AC32E9EA74C003508CD /* GunBeatGameUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = GunBeatGameUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -97,8 +66,6 @@
 			isa = PBXGroup;
 			children = (
 				A1048AAB2E9EA747003508CD /* GunBeatGame */,
-				A1048AB92E9EA74C003508CD /* GunBeatGameTests */,
-				A1048AC32E9EA74C003508CD /* GunBeatGameUITests */,
 				A1048AAA2E9EA747003508CD /* Products */,
 			);
 			sourceTree = "<group>";
@@ -151,9 +118,6 @@
 			dependencies = (
 				A1048AB82E9EA74C003508CD /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				A1048AB92E9EA74C003508CD /* GunBeatGameTests */,
-			);
 			name = GunBeatGameTests;
 			packageProductDependencies = (
 			);
@@ -173,9 +137,6 @@
 			);
 			dependencies = (
 				A1048AC22E9EA74C003508CD /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				A1048AC32E9EA74C003508CD /* GunBeatGameUITests */,
 			);
 			name = GunBeatGameUITests;
 			packageProductDependencies = (
