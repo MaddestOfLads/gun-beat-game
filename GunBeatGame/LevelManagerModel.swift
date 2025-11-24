@@ -1,9 +1,14 @@
 import Foundation
+import SwiftUI
+import Combine
 
-struct LevelData: Codable {
+
+// Change this line:
+struct LevelData: Codable, Identifiable {
     let id: String
     let title: String
     let description: String
+    // ... keep the rest of your properties exactly the same ...
     let songBPM: Float
     let bubbles: [Bubble]
     let startingAmmo: Int
@@ -70,4 +75,36 @@ func loadAllLevels() -> [LevelData] {
         print("Error reading Levels directory:", error)
     }
     return levels
+}
+
+class LevelViewModel: ObservableObject {
+    @Published var levels: [LevelData] = []
+
+    init() {
+        // We call this immediately when the app starts
+        loadLevels()
+    }
+
+    func loadLevels() {
+        // 1. Look for the file named "1.json" in the main bundle
+        if let url = Bundle.main.url(forResource: "1", withExtension: "json") {
+            do {
+                // 2. Try to read the data
+                let data = try Data(contentsOf: url)
+                let decoder = JSONDecoder()
+                
+                // 3. Decode it into your LevelData structure
+                let level = try decoder.decode(LevelData.self, from: data)
+                
+                // 4. Add it to our list
+                self.levels = [level]
+                print("Success: Loaded level \(level.title)")
+                
+            } catch {
+                print("Error decoding JSON: \(error)")
+            }
+        } else {
+            print("Error: Could not find file '1.json'")
+        }
+    }
 }

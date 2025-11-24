@@ -111,14 +111,21 @@ let demoLevels: [Level] = [
 ]
 
 struct LevelSelectView: View {
+  // Connect the View Model
+  @StateObject var viewModel = LevelViewModel()
+
   var body: some View {
     ZStack {
       Theme.bg.ignoresSafeArea()
+      
       ScrollView {
         LazyVStack(spacing: 16) {
-          ForEach(demoLevels) { level in
+          
+          // Loop over the REAL levels from the JSON
+          ForEach(viewModel.levels) { level in
             LevelCard(level: level)
           }
+          
         }
         .padding(16)
       }
@@ -128,23 +135,33 @@ struct LevelSelectView: View {
 }
 
 struct LevelCard: View {
-  let level: Level
+  let level: LevelData // <--- Changed from Level to LevelData
+    
   var body: some View {
     HStack(spacing: 12) {
-      // thumbnail placeholder
+      // Thumbnail
       RoundedRectangle(cornerRadius: 12)
         .fill(.white.opacity(0.7))
         .frame(width: 120, height: 80)
+        // Optional: If you have the image asset, use: Image(level.coverAssetName)...
 
       VStack(alignment: .leading, spacing: 6) {
-        Text(level.title).font(.headline)
-        Text(level.description).font(.subheadline).opacity(0.7)
-        Stars(rating: level.rating)
+        Text(level.title)
+              .font(.headline)
+              .foregroundStyle(.black) // Make sure text is visible
+          
+        Text(level.description)
+              .font(.subheadline)
+              .opacity(0.7)
+              .foregroundStyle(.black)
+          
+        // Your JSON doesn't have a rating yet, so let's fake it for UI purposes
+        Stars(rating: 3)
       }
       Spacer()
 
         NavigationLink {
-          GameplayView()   // go to gameplay screen
+          GameplayView()
         } label: {
           Image(systemName: "play.fill")
             .padding(14)
