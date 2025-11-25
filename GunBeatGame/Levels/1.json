@@ -4,7 +4,7 @@
   "description": "Learn the basics of shooting to the rhythm.",
   "songBPM": 120.0,
   "startingAmmo": 6,
-  "ammoDivider": 1,
+  "ammoDivisor": 1,
   "musicAssetName": "music_track_1",
   "backgroundAssetName": "bg_city",
   "coverAssetName": "cover_1",
