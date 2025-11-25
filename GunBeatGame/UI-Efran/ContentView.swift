@@ -10,7 +10,7 @@ struct Theme {
 struct RootView: View {
   var body: some View {
     NavigationStack {
-      TitleView()
+      GameView()
         .navigationBarHidden(true)
     }
   }
