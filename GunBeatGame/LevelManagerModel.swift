@@ -1,3 +1,6 @@
+//Here we have the code for decoding levels from the JSON files stored in the assetsa
+
+
 import Foundation
 import SwiftUI
 import Combine
@@ -9,8 +12,8 @@ struct LevelData: Codable, Identifiable {
     let title: String
     let description: String
     let songBPM: Float
-    let bubbles: [Bubble]
-    let startingAmmo: Int
+    let bubbles: [Bubble] 
+    let startingAmmo: Int 
     let ammoDivider: Int
     let musicAssetName: String
     let backgroundAssetName: String
@@ -19,8 +22,8 @@ struct LevelData: Codable, Identifiable {
 
 struct Bubble: Codable {
     let targetBeat: Float
-    let size: Float
-    let speed: Float
+    let size: Float //IN SCREENS!!
+    let speed: Float // SCREENS PER BEAT
     let color: RGBColor
 }
 
