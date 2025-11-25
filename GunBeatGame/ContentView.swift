@@ -79,7 +79,7 @@ struct CreditsView: View {
                             .foregroundStyle(.white.opacity(0.8))
                     )
 
-                // 👇 Text that shows how many times Credits was opened
+                //Text that shows how many times Credits was opened
                 Text("You have opened this screen \(openCount) times")
                     .foregroundStyle(.white)
 
@@ -89,7 +89,7 @@ struct CreditsView: View {
             .navigationTitle("Credits")
             .navigationBarTitleDisplayMode(.inline)
             .onAppear {
-                // 👇 increase the counter every time the screen appears
+                //increase the counter every time the screen appears
                 openCount += 1
             }
         }
