@@ -3,12 +3,11 @@ import SwiftUI
 import Combine
 
 
-// Change this line:
+
 struct LevelData: Codable, Identifiable {
     let id: String
     let title: String
     let description: String
-    // ... keep the rest of your properties exactly the same ...
     let songBPM: Float
     let bubbles: [Bubble]
     let startingAmmo: Int
@@ -20,8 +19,8 @@ struct LevelData: Codable, Identifiable {
 
 struct Bubble: Codable {
     let targetBeat: Float
-    let size: Float         // in screens
-    let speed: Float        // screens per beat
+    let size: Float
+    let speed: Float
     let color: RGBColor
 }
 
@@ -81,7 +80,7 @@ class LevelViewModel: ObservableObject {
     @Published var levels: [LevelData] = []
 
     init() {
-        // We call this immediately when the app starts
+       
         loadLevels()
     }
 

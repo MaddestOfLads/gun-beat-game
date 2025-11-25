@@ -135,7 +135,7 @@ struct LevelSelectView: View {
 }
 
 struct LevelCard: View {
-  let level: LevelData // <--- Changed from Level to LevelData
+  let level: LevelData
     
   var body: some View {
     HStack(spacing: 12) {
@@ -143,19 +143,19 @@ struct LevelCard: View {
       RoundedRectangle(cornerRadius: 12)
         .fill(.white.opacity(0.7))
         .frame(width: 120, height: 80)
-        // Optional: If you have the image asset, use: Image(level.coverAssetName)...
+        
 
       VStack(alignment: .leading, spacing: 6) {
         Text(level.title)
               .font(.headline)
-              .foregroundStyle(.black) // Make sure text is visible
+              .foregroundStyle(.black)
           
         Text(level.description)
               .font(.subheadline)
               .opacity(0.7)
               .foregroundStyle(.black)
           
-        // Your JSON doesn't have a rating yet, so let's fake it for UI purposes
+        
         Stars(rating: 3)
       }
       Spacer()
