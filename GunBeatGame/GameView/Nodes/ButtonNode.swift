@@ -10,6 +10,8 @@
 */
 //If you want the button to make the parent call a function, use the Node.parent property.
 
+import SwiftUI
+
 class ButtonNode: Node {
     var text: String
     var color: Color
@@ -30,7 +32,7 @@ class ButtonNode: Node {
     override func draw(in size: CGSize) -> AnyView { //Overrides Node.draw()
         AnyView(
             Button(action: {
-                onPressed?()
+                self.onPressed?()
             }) {
                 Text(text)
                     .frame(width: size.width * dimensions.width,

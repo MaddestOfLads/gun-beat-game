@@ -59,6 +59,9 @@ If you want examples, open the Bubble class and look at enterTree, physicsProces
         Avoid making nodes overly reliant on other nodes if it isn't necessary.
         Not every node needs to draw() something, some nodes may not have any appearance.
 */
+
+import SwiftUI
+
 class Node {
 
     weak var parent: Node?

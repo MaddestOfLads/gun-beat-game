@@ -1,4 +1,5 @@
-
+import SwiftUI
+import Combine
 //The designated root node with no parent.
 //This is the only node with its own update timer - all other nodes are updated when this one updates itself.
 
@@ -12,17 +13,23 @@ class GameLoop : Node, ObservableObject{
     
     var frameTimer : Timer?
 
-    var packedBubbles : [PackedBubble]
+    var packedBubbles : [PackedBubble] = []
     var indexOfNextBubbleToSpawn : Int = 0
     
-    var gunButton : BubbonNode
+    lazy var gunButton: ButtonNode = {
+        let button = ButtonNode(
+            position: CGPoint(x:0.7, y:0.8),
+            dimensions: CGSize(width:0.2, height:0.15),
+            color: Color.green,
+            text: "Gun",
+            onPressed: { self.fireGun() }
+        )
+        return button
+    }()
 
-    init() {
-        enterTree()
-    }
-
-    func enterTree() {
-        loadLevelData(120.0)
+    override init() {
+        super.init()
+        loadLevelData(bpm: 120.0)
         spawnLevelUI()
         let dt = 1.0 / FPS
         let db = dt * (self.bpm / 60.0)
@@ -34,13 +41,6 @@ class GameLoop : Node, ObservableObject{
 
     func spawnLevelUI()
     {
-        gunButton = ButtonNode(
-            position: CGPoint(0.7, 0.8),
-            dimensions: CGSize(0.2, 0.15),
-            color: Color.green(),
-            text: "Gun",
-            onPressed: {fireGun()}
-        )
         addChild(gunButton)
     }
 
@@ -55,20 +55,19 @@ class GameLoop : Node, ObservableObject{
         //TODO: load more things, like songs, bubble data, etc. from the database
     {
         self.bpm = bpm
-        self.packedBubbles = packedBubbles
 
         //TODO: load bubbles from file instead
             //Note: PackedBubble has more optional arguments, see PackedBubble.swift
-        self.packedBubbles.append(PackedBubble(targetBeat : 2.0, speedInScreensPerBeat : 0.5))
-        self.packedBubbles.append(PackedBubble(targetBeat : 4.0, speedInScreensPerBeat : 0.5))
-        self.packedBubbles.append(PackedBubble(targetBeat : 6.0, speedInScreensPerBeat : 0.5))
-        self.packedBubbles.append(PackedBubble(targetBeat : 8.0, speedInScreensPerBeat : 0.5))
+        self.packedBubbles.append(PackedBubble(targetBeat : 2.0, speed : 0.5))
+        self.packedBubbles.append(PackedBubble(targetBeat : 4.0, speed : 0.5))
+        self.packedBubbles.append(PackedBubble(targetBeat : 6.0, speed : 0.5))
+        self.packedBubbles.append(PackedBubble(targetBeat : 8.0, speed : 0.5))
 
         //Sort bubbles by spawn time ascending to simplify spawn logic
         packedBubbles = packedBubbles.sorted {$0.spawnBeat < $1.spawnBeat}
     }
 
-    func physicsProcess(dt : Double, db : Double) //Override from Node
+    override func physicsProcess(dt : Double, db : Double) //Override from Node
     {
         frame += 1
         beat += db
@@ -77,17 +76,13 @@ class GameLoop : Node, ObservableObject{
             child.physicsProcess(dt: dt, db: db);
         }
     }
-    func preloadBubbles()
-        //Creates all bubble objects before the song plays
-        //This only needs to trigger ONCE, when the level is loaded. Even if you restart the song, don't trigger it again.
-    {
-    }
     
     //Spawns next bubble if its spawn time has come
     func spawnBubbles() {
-        while(packedBubbles[indexOfNextBubbleToSpawn].spawnBeat) {
-            var newBubble = packedBubbles[indexOfNextBubbleToSpawn].spawnBubble()
+        while(indexOfNextBubbleToSpawn < packedBubbles.count && beat > packedBubbles[indexOfNextBubbleToSpawn].spawnBeat) {
+            let newBubble : Bubble = Bubble(pb: packedBubbles[indexOfNextBubbleToSpawn])
             addChild(newBubble)
+            indexOfNextBubbleToSpawn += 1
         }
     }
 
