@@ -14,7 +14,7 @@ struct LevelData: Codable, Identifiable {
     let songBPM: Float
     let bubbles: [Bubble] 
     let startingAmmo: Int 
-    let ammoDivider: Int
+    let ammoDivisor: Int
     let musicAssetName: String
     let backgroundAssetName: String
     let coverAssetName: String
