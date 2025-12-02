@@ -58,16 +58,16 @@ class GameLoop : Node, ObservableObject{
 
         //TODO: load bubbles from file instead
             //Note: PackedBubble has more optional arguments, see PackedBubble.swift
-        self.packedBubbles.append(PackedBubble(targetBeat : 2.0, speed : 0.5))
-        self.packedBubbles.append(PackedBubble(targetBeat : 4.0, speed : 0.5))
-        self.packedBubbles.append(PackedBubble(targetBeat : 6.0, speed : 0.5))
-        self.packedBubbles.append(PackedBubble(targetBeat : 8.0, speed : 0.5))
+        self.packedBubbles.append(PackedBubble(targetBeat : 2.0, speed : 0.12))
+        self.packedBubbles.append(PackedBubble(targetBeat : 4.0, speed : 0.12))
+        self.packedBubbles.append(PackedBubble(targetBeat : 6.0, speed : 0.12))
+        self.packedBubbles.append(PackedBubble(targetBeat : 8.0, speed : 0.12))
 
         //Sort bubbles by spawn time ascending to simplify spawn logic
         packedBubbles = packedBubbles.sorted {$0.spawnBeat < $1.spawnBeat}
     }
 
-    override func physicsProcess(dt : Double, db : Double) //Override from Node
+    override func physicsProcess(dt : Double, db : Double)
     {
         frame += 1
         beat += db
@@ -80,7 +80,7 @@ class GameLoop : Node, ObservableObject{
     //Spawns next bubble if its spawn time has come
     func spawnBubbles() {
         while(indexOfNextBubbleToSpawn < packedBubbles.count && beat > packedBubbles[indexOfNextBubbleToSpawn].spawnBeat) {
-            let newBubble : Bubble = Bubble(pb: packedBubbles[indexOfNextBubbleToSpawn])
+            let newBubble : BubbleNode = BubbleNode(pb: packedBubbles[indexOfNextBubbleToSpawn])
             addChild(newBubble)
             indexOfNextBubbleToSpawn += 1
         }
@@ -92,6 +92,13 @@ class GameLoop : Node, ObservableObject{
     //TODO: make the gun node trigger this function when pressed
     func fireGun() {
         //TODO: handle gunfire
+        for child in children{
+            if let bubble = child as? BubbleNode {
+                if (bubble.hitAccuracy(popHeight: 0.8) > 0) {
+                    bubble.getHit()
+                }
+            }
+        }
     }
 
     //TODO: make bubbles poppable
