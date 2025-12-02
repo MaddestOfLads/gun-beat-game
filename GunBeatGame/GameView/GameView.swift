@@ -8,7 +8,8 @@ import SwiftUI
 struct GameView: View {
     
     @ObservedObject var gameLoop = GameLoop()
-    //Most game logic happens inside gameLoop
+    //Most game logic happens inside gameLoop.
+    //This constructor kickstarts everything.
 
     var body: some View {
         //View should automatically update when gameLoop triggers the next frame

@@ -2,7 +2,7 @@
 
 /*
 HOW TO USE THIS CLASS: make another class that extends it, and then override enterTree(), physicsProcess() and draw() (explained below) to give it custom behaviour. 
-See Bubble for examples.
+If you want examples, open the Bubble class and look at enterTree, physicsProcess, and draw.
     PROPERTIES:
         
         parent:
@@ -13,15 +13,6 @@ See Bubble for examples.
             ORDER OF CHILDREN MATTERS BECAUSE OF TREE ORDER - see below
 
     FUNCTIONS:
-        
-        addChild(node):
-            Don't override.
-            Adds a different node (the one in the argument) as a child of this node.
-            You should call this every time you create a node.
-        
-        removeChild(node):
-            Don't override.
-            Removes this node from the list of children and marks it for deletion.
         
         enterTree():
             Override it to make a node do something at the start of its lifetime (AKA when it is added to another node with AddChild()).
@@ -35,15 +26,26 @@ See Bubble for examples.
             Override it to make this node draw itself on the canvas. It should return a view.
             canvasSize = dimensions of the screen. Multiply by this value to convert from 0-1 coordinates to actual on-screen pixel coordinates.
         
-        There's 2 more functions that exist as wrappers for draw() and physicsProcess().
+        addChild(node):
+            Don't override.
+            Call this every time you create a node to make it a child node of this one.
+                As a result, the child node will also start calling physicsProcess() and draw() automatically at appropriate times.
+            Also triggers the child node's enterTree() instantly, because it just entered the tree.
+
+        removeChild(node):
+            Don't override.
+            Removes a node from the list of children and marks it for deletion.
+        
+        physicsProcessSelfThenChildren() and drawSelfThenChildren():
+            Wrappers for physicsProcess() and draw().
             Don't worry about them, don't override them, they just execute physicsProcess() and draw() in tree order.
     
-    Explanation of how nodes are organized:
+    Explanation of tree order:
         Nodes are arranged in a tree (each node has children) which lets them do things recursively, in tree order.
-        Tree order means: first trigger function on self, then on children. Applies recursively to children too.
+        Tree order means: first trigger function on self, then recursively on children.
         This way, only the root node triggers each frame on a timer, and all of its children trigger the behaviour after it, avoiding having a bunch of unrelated timers for everything.
-        Tree order applies to: enterTree(), draw(), physicsProcess().
-    
+        Tree order applies to draw() (used for rendering) and physicsProcess() (used to do things each frame).
+
     Notes:
         You can do pretty much anything by overriding enterTree(), physicsProcess() and draw().
             enterTree() - does something at the start of the node's life
@@ -64,7 +66,7 @@ class Node {
         //Or at least that's what chatgpt says.
     
     var children: [Node] = []
-
+    
     final func addChild(_ node: Node) -> Void {
         node.parent = self
         children.append(node)

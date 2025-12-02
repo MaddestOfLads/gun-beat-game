@@ -19,6 +19,7 @@ class ButtonNode: Node {
     let cornerRadius: CGFloat = 8.0;
 
     init(position: CGPoint, dimensions: CGSize, color: Color, text: String, onPressed: (() -> Void)? = nil) {
+        //TODO: add an optional image argument or sth
         self.position = position
         self.dimensions = dimensions
         self.color = color
@@ -26,7 +27,7 @@ class ButtonNode: Node {
         self.onPressed = onPressed
     }
 
-    override func draw(in size: CGSize) -> AnyView { //Override from Node
+    override func draw(in size: CGSize) -> AnyView { //Overrides Node.draw()
         AnyView(
             Button(action: {
                 onPressed?()

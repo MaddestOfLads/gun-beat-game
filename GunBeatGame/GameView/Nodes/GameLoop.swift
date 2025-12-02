@@ -10,21 +10,22 @@ class GameLoop : Node, ObservableObject{
     var beat: Double = 0.0
         //Time measured in beats. Resets on song restart.
     
-    var frameTimer : Timer
-        //The timer that triggers every frame.
+    var frameTimer : Timer?
 
     var packedBubbles : [PackedBubble]
-        //These are not nodes, just data objects for spawning actual bubble nodes.
-    
     var indexOfNextBubbleToSpawn : Int = 0
-        //Bubbles are ordered by their spawn time. This is the index of the next bubble to spawn.
-        //Should be reset to 0 every time the song is restarted.
     
     var gunButton : BubbonNode
 
-    func init() {
+    init() {
+        enterTree()
+    }
+
+    func enterTree() {
         loadLevelData(120.0)
         spawnLevelUI()
+        let dt = 1.0 / FPS
+        let db = dt * (self.bpm / 60.0)
         frameTimer = Timer.scheduledTimer(withTimeInterval: dt, repeats: true) { _ in
             self.physicsProcessSelfThenChildren(dt: dt, db: db)
         }
@@ -33,29 +34,36 @@ class GameLoop : Node, ObservableObject{
 
     func spawnLevelUI()
     {
-
+        gunButton = ButtonNode(
+            position: CGPoint(0.7, 0.8),
+            dimensions: CGSize(0.2, 0.15),
+            color: Color.green(),
+            text: "Gun",
+            onPressed: {fireGun()}
+        )
+        addChild(gunButton)
     }
 
+    //TODO: add a song restart button to call this function
     func startOrRestartSong() {
         beat = 0.0
         //TODO: play/restart the level's song
         //TODO: destroy all spawned bubbles
-        //TODO: (later down the line)
     }
 
     func loadLevelData(bpm: Double)
-        //TODO: load more things, like songs, bubble data, etc. here
+        //TODO: load more things, like songs, bubble data, etc. from the database
     {
         self.bpm = bpm
         self.packedBubbles = packedBubbles
 
         //TODO: load bubbles from file instead
-        //read packedBubble 
+            //Note: PackedBubble has more optional arguments, see PackedBubble.swift
         self.packedBubbles.append(PackedBubble(targetBeat : 2.0, speedInScreensPerBeat : 0.5))
         self.packedBubbles.append(PackedBubble(targetBeat : 4.0, speedInScreensPerBeat : 0.5))
         self.packedBubbles.append(PackedBubble(targetBeat : 6.0, speedInScreensPerBeat : 0.5))
         self.packedBubbles.append(PackedBubble(targetBeat : 8.0, speedInScreensPerBeat : 0.5))
-        
+
         //Sort bubbles by spawn time ascending to simplify spawn logic
         packedBubbles = packedBubbles.sorted {$0.spawnBeat < $1.spawnBeat}
     }
@@ -87,7 +95,7 @@ class GameLoop : Node, ObservableObject{
     //TODO: make a gun node by extending ButtonNode
 
     //TODO: make the gun node trigger this function when pressed
-    func onGunFired() {
+    func fireGun() {
         //TODO: handle gunfire
     }
 
