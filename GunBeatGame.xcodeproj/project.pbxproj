@@ -35,16 +35,6 @@
 			path = GunBeatGame;
 			sourceTree = "<group>";
 		};
-		A1048AB92E9EA74C003508CD /* GunBeatGameTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = GunBeatGameTests;
-			sourceTree = "<group>";
-		};
-		A1048AC32E9EA74C003508CD /* GunBeatGameUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = GunBeatGameUITests;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,8 +66,6 @@
 			isa = PBXGroup;
 			children = (
 				A1048AAB2E9EA747003508CD /* GunBeatGame */,
-				A1048AB92E9EA74C003508CD /* GunBeatGameTests */,
-				A1048AC32E9EA74C003508CD /* GunBeatGameUITests */,
 				A1048AAA2E9EA747003508CD /* Products */,
 			);
 			sourceTree = "<group>";
@@ -130,9 +118,6 @@
 			dependencies = (
 				A1048AB82E9EA74C003508CD /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				A1048AB92E9EA74C003508CD /* GunBeatGameTests */,
-			);
 			name = GunBeatGameTests;
 			packageProductDependencies = (
 			);
@@ -152,9 +137,6 @@
 			);
 			dependencies = (
 				A1048AC22E9EA74C003508CD /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				A1048AC32E9EA74C003508CD /* GunBeatGameUITests */,
 			);
 			name = GunBeatGameUITests;
 			packageProductDependencies = (
@@ -401,7 +383,8 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIStatusBarStyle = "";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationPortrait";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -432,7 +415,8 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIStatusBarStyle = "";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationPortrait";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
