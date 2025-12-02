@@ -87,11 +87,8 @@ class GameLoop : Node, ObservableObject{
     }
 
 
-    //TODO: make a gun node by extending ButtonNode
 
-    //TODO: make the gun node trigger this function when pressed
     func fireGun() {
-        //TODO: handle gunfire
         for child in children{
             if let bubble = child as? BubbleNode {
                 if (bubble.hitAccuracy(popHeight: 0.8) > 0) {
@@ -100,7 +97,11 @@ class GameLoop : Node, ObservableObject{
             }
         }
     }
+    //TODO: pause button
+    //TODO: restart button
+    //TODO: score counter
+    //TODO: music
+    //TODO: improve bubble pop animation
 
-    //TODO: make bubbles poppable
-    //TODO: do something when bubbles aren't popped
+
 }
