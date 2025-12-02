@@ -1,0 +1,25 @@
+{
+  "id": "level_1",
+  "title": "The First Beat",
+  "description": "Learn the basics of shooting to the rhythm.",
+  "songBPM": 120.0,
+  "startingAmmo": 6,
+  "ammoDivisor": 1,
+  "musicAssetName": "music_track_1",
+  "backgroundAssetName": "bg_city",
+  "coverAssetName": "cover_1",
+  "bubbles": [
+    {
+      "targetBeat": 4.0,
+      "size": 0.2,
+      "speed": 1.0,
+      "color": { "r": 255, "g": 0, "b": 0 }
+    },
+    {
+      "targetBeat": 8.0,
+      "size": 0.2,
+      "speed": 1.2,
+      "color": { "r": 0, "g": 255, "b": 0 }
+    }
+  ]
+}
