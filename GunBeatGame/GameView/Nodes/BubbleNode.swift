@@ -3,10 +3,20 @@ import SwiftUI
 class BubbleNode : Node{
     
     let SPAWN_POS : CGPoint = CGPoint(x: 0.35, y: -0.5)
+    
     var size : CGSize
     var position : CGPoint
     var color : Color
+    
+    //variables for controlling the pop animation:
+    let POP_ANIMATION_TIME : Double = 0.4
+    var beats_since_popped : Double = 0.0
+    var isPopped : Bool = false
+    var opacity : Double = 1.0
+    var popped_x_speed : Double = -0.4
 
+
+    
     var speed : Double //Measured in screens per beat
 
     var hitMargin : CGFloat //Margin used to accept imperfect hits with a lesser score
@@ -25,7 +35,15 @@ class BubbleNode : Node{
     //Called by parent node every frame
     //Makes the bubble move
     {
-        position.y += db * speed
+        if(!isPopped) {
+            position.y += db * speed
+        }
+        else
+        {
+            beats_since_popped += db
+            opacity -= db / POP_ANIMATION_TIME
+            position.x += db * popped_x_speed
+        }
     }
 
     override func draw(in canvasSize: CGSize) -> AnyView
@@ -34,7 +52,9 @@ class BubbleNode : Node{
         return AnyView(Rectangle()
             .fill(color)
             .frame(width: size.width * canvasSize.width, height: size.height * canvasSize.height)
-            .position(x: position.x * canvasSize.width, y: position.y * canvasSize.height))
+            .position(x: position.x * canvasSize.width, y: position.y * canvasSize.height)
+            .opacity(opacity)
+        )
     }
 
     func hitAccuracy(popHeight : CGFloat) -> Double
@@ -59,7 +79,7 @@ class BubbleNode : Node{
 
     func getHit()
     {
+        isPopped = true
         color = Color.red
-        //TODO: smash the bubble to pieces or sth
     }
 }

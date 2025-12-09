@@ -64,6 +64,7 @@ import SwiftUI
 
 class Node {
 
+    
     weak var parent: Node?
         //If it was not marked weak, it could cause memory leaks - Swift could try storing parent.child.parent.child... endlessly and waste memory that way.
         //Or at least that's what chatgpt says.
