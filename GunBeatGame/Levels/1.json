@@ -2,24 +2,108 @@
   "id": "level_1",
   "title": "The First Beat",
   "description": "Learn the basics of shooting to the rhythm.",
-  "songBPM": 120.0,
+  "songBPM": 200.0,
   "startingAmmo": 6,
   "ammoDivisor": 1,
-  "musicAssetName": "music_track_1",
+  "musicAssetName": "Music/awesome funky fight music",
   "backgroundAssetName": "bg_city",
   "coverAssetName": "cover_1",
   "bubbles": [
     {
-      "targetBeat": 4.0,
+      "targetBeat": 8.0,
       "size": 0.2,
-      "speed": 1.0,
+      "speed": 0.2,
+      "color": { "r": 0, "g": 0, "b": 255 }
+    },
+    {
+      "targetBeat": 9.0,
+      "size": 0.2,
+      "speed": 0.2,
+      "color": { "r": 0, "g": 0, "b": 255 }
+    },
+    {
+      "targetBeat": 10.0,
+      "size": 0.2,
+      "speed": 0.2,
+      "color": { "r": 0, "g": 0, "b": 255 }
+    },
+    {
+      "targetBeat": 11.0,
+      "size": 0.2,
+      "speed": 0.2,
+      "color": { "r": 0, "g": 0, "b": 255 }
+    },
+    {
+      "targetBeat": 12.0,
+      "size": 0.2,
+      "speed": 0.2,
+      "color": { "r": 255, "g": 255, "b": 0 }
+    },
+    {
+      "targetBeat": 12.5,
+      "size": 0.2,
+      "speed": 0.2,
+      "color": { "r": 255, "g": 255, "b": 0 }
+    },
+    {
+      "targetBeat": 13.0,
+      "size": 0.2,
+      "speed": 0.2,
+      "color": { "r": 255, "g": 255, "b": 0 }
+    },
+    {
+      "targetBeat": 13.5,
+      "size": 0.2,
+      "speed": 0.2,
+      "color": { "r": 255, "g": 255, "b": 0 }
+    },
+    {
+      "targetBeat": 14.0,
+      "size": 0.2,
+      "speed": 0.2,
       "color": { "r": 255, "g": 0, "b": 0 }
     },
     {
-      "targetBeat": 8.0,
+      "targetBeat": 14.25,
       "size": 0.2,
-      "speed": 1.2,
-      "color": { "r": 0, "g": 255, "b": 0 }
+      "speed": 0.2,
+      "color": { "r": 255, "g": 0, "b": 0 }
+    },
+    {
+      "targetBeat": 14.5,
+      "size": 0.3,
+      "speed": 0.2,
+      "color": { "r": 255, "g": 0, "b": 0 }
+    },
+    {
+      "targetBeat": 14.75,
+      "size": 0.3,
+      "speed": 0.2,
+      "color": { "r": 255, "g": 0, "b": 0 }
+    },
+    {
+      "targetBeat": 15.0,
+      "size": 0.2,
+      "speed": 0.2,
+      "color": { "r": 255, "g": 0, "b": 0 }
+    },
+    {
+      "targetBeat": 15.25,
+      "size": 0.2,
+      "speed": 0.2,
+      "color": { "r": 255, "g": 0, "b": 0 }
+    },
+    {
+      "targetBeat": 15.5,
+      "size": 0.3,
+      "speed": 0.2,
+      "color": { "r": 255, "g": 0, "b": 0 }
+    },
+    {
+      "targetBeat": 15.75,
+      "size": 0.3,
+      "speed": 0.2,
+      "color": { "r": 255, "g": 0, "b": 0 }
     }
   ]
 }

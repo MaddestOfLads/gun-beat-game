@@ -15,7 +15,9 @@ class GameLoop : Node, ObservableObject{
 
     var packedBubbles : [PackedBubble] = []
     var indexOfNextBubbleToSpawn : Int = 0
-    
+
+	var song_player : AVAudioPlayer!
+
     lazy var gunButton: ButtonNode = {
         let button = ButtonNode(
             position: CGPoint(x:0.7, y:0.8),
@@ -26,10 +28,10 @@ class GameLoop : Node, ObservableObject{
         )
         return button
     }()
-
-    override init() {
+    
+    init(levelData : LevelData) {
         super.init()
-        loadLevelData(bpm: 120.0)
+        loadLevelData(levelData)
         spawnLevelUI()
         let dt = 1.0 / FPS
         let db = dt * (self.bpm / 60.0)
@@ -46,22 +48,31 @@ class GameLoop : Node, ObservableObject{
 
     //TODO: add a song restart button to call this function
     func startOrRestartSong() {
-        beat = 0.0
+			beat = 0.0
         //TODO: play/restart the level's song
         //TODO: destroy all spawned bubbles
     }
 
-    func loadLevelData(bpm: Double)
-        //TODO: load more things, like songs, bubble data, etc. from the database
+    func loadLevelData(levelData : LevelData)
     {
-        self.bpm = bpm
+		// Load song data
+        self.bpm = levelData.songBPM
+		let url = Bundle.main.url(forResource: levelData.musicAssetName)
 
-        //TODO: load bubbles from file instead
-            //Note: PackedBubble has more optional arguments, see PackedBubble.swift
-        self.packedBubbles.append(PackedBubble(targetBeat : 2.0, speed : 0.12))
-        self.packedBubbles.append(PackedBubble(targetBeat : 4.0, speed : 0.12))
-        self.packedBubbles.append(PackedBubble(targetBeat : 6.0, speed : 0.12))
-        self.packedBubbles.append(PackedBubble(targetBeat : 8.0, speed : 0.12))
+		// Load bubbles
+		for bubble in levelData.bubbles {
+        	self.packedBubbles.append(PackedBubble(
+				targetBeat : bubble.targetBeat,
+				height : bubble.size,
+				speed : bubble.speed,
+				color : Color(
+					red: bubble.color.r,
+					green: bubble.color.g,
+					blue: bubble.color.b
+					)
+				)
+			)
+		}
 
         //Sort bubbles by spawn time ascending to simplify spawn logic
         packedBubbles = packedBubbles.sorted {$0.spawnBeat < $1.spawnBeat}
@@ -85,8 +96,6 @@ class GameLoop : Node, ObservableObject{
             indexOfNextBubbleToSpawn += 1
         }
     }
-
-
 
     func fireGun() {
         for child in children{
