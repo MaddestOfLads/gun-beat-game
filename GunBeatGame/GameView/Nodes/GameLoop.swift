@@ -1,5 +1,6 @@
 import SwiftUI
 import Combine
+import AVFoundation
 //The designated root node with no parent.
 //This is the only node with its own update timer - all other nodes are updated when this one updates itself.
 
@@ -31,7 +32,7 @@ class GameLoop : Node, ObservableObject{
     
     init(levelData : LevelData) {
         super.init()
-        loadLevelData(levelData)
+        loadLevelData(levelData: levelData)
         spawnLevelUI()
         let dt = 1.0 / FPS
         let db = dt * (self.bpm / 60.0)
@@ -55,43 +56,63 @@ class GameLoop : Node, ObservableObject{
 
     func loadLevelData(levelData : LevelData)
     {
-		// Load song data
-        self.bpm = levelData.songBPM
-		let url = Bundle.main.url(forResource: levelData.musicAssetName)
+        let parts = levelData.musicAssetName.split(separator: "/").map(String.init)
+        let last = parts.last ?? levelData.musicAssetName
+        let subdir = parts.count > 1 ? parts.dropLast().joined(separator: "/") : nil
+
+        let fileParts = last.split(separator: ".", maxSplits: 1).map(String.init)
+        let name = fileParts.first ?? last
+        let ext  = fileParts.count == 2 ? fileParts[1] : "wav"
+
+        if let url = Bundle.main.url(forResource: name, withExtension: ext, subdirectory: subdir) {
+            do {
+                song_player = try AVAudioPlayer(contentsOf: url)
+                song_player.prepareToPlay()
+            } catch {
+                print("❌ AVAudioPlayer init failed:", error)
+            }
+        } else {
+            print("❌ Could not find audio file:", subdir ?? "(root)", "\(name).\(ext)")
+        }
+        // DO NOT return; let bubbles load regardless
 
 		// Load bubbles
-		for bubble in levelData.bubbles {
-        	self.packedBubbles.append(PackedBubble(
-				targetBeat : bubble.targetBeat,
-				height : bubble.size,
-				speed : bubble.speed,
-				color : Color(
-					red: bubble.color.r,
-					green: bubble.color.g,
-					blue: bubble.color.b
-					)
-				)
-			)
-		}
+        for bubble in levelData.bubbles {
+
+            let r = Double(bubble.color.r) / 255.0
+            let g = Double(bubble.color.g) / 255.0
+            let b = Double(bubble.color.b) / 255.0
+            let c = Color(red: r, green: g, blue: b)
+
+            self.packedBubbles.append(
+                PackedBubble(
+                    targetBeat: Double(bubble.targetBeat),
+                    speed: Double(bubble.speed),
+                    height: Double(bubble.size),
+                    color: c
+                )
+            )
+        }
 
         //Sort bubbles by spawn time ascending to simplify spawn logic
         packedBubbles = packedBubbles.sorted {$0.spawnBeat < $1.spawnBeat}
     }
 
-    override func physicsProcess(dt : Double, db : Double)
-    {
+    override func physicsProcess(dt: Double, db: Double) {
         frame += 1
         beat += db
         spawnBubbles()
-        for child in children{
-            child.physicsProcess(dt: dt, db: db);
-        }
     }
     
     //Spawns next bubble if its spawn time has come
     func spawnBubbles() {
-        while(indexOfNextBubbleToSpawn < packedBubbles.count && beat > packedBubbles[indexOfNextBubbleToSpawn].spawnBeat) {
-            let newBubble : BubbleNode = BubbleNode(pb: packedBubbles[indexOfNextBubbleToSpawn])
+        while indexOfNextBubbleToSpawn < packedBubbles.count &&
+              beat > packedBubbles[indexOfNextBubbleToSpawn].spawnBeat {
+
+            print("✅ Spawning bubble at beat:", beat,
+                  "spawnBeat:", packedBubbles[indexOfNextBubbleToSpawn].spawnBeat)
+            print("beat:", beat, "count:", packedBubbles.count, "nextIdx:", indexOfNextBubbleToSpawn)
+            let newBubble = BubbleNode(pb: packedBubbles[indexOfNextBubbleToSpawn])
             addChild(newBubble)
             indexOfNextBubbleToSpawn += 1
         }

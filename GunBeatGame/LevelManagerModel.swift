@@ -36,17 +36,27 @@ struct RGBColor: Codable {
 
 
 func loadLevelData(named fileName: String) -> LevelData? {
-    guard let url = Bundle.main.url(forResource: fileName, withExtension: "json") else {
-        print("Could not find \(fileName).json")
+    let clean = fileName.replacingOccurrences(of: ".json", with: "")
+
+    let candidates: [URL?] = [
+        Bundle.main.url(forResource: clean, withExtension: "json", subdirectory: "Levels"),
+        Bundle.main.url(forResource: clean, withExtension: "json")
+    ]
+
+    guard let url = candidates.compactMap({ $0 }).first else {
+        let inLevels = Bundle.main.urls(forResourcesWithExtension: "json", subdirectory: "Levels") ?? []
+        let inRoot   = Bundle.main.urls(forResourcesWithExtension: "json", subdirectory: nil) ?? []
+        print("❌ Could not find \(clean).json")
+        print("JSON in Levels:", inLevels.map { $0.lastPathComponent })
+        print("JSON in root:", inRoot.map { $0.lastPathComponent })
         return nil
     }
 
     do {
         let data = try Data(contentsOf: url)
-        let decoder = JSONDecoder()
-        return try decoder.decode(LevelData.self, from: data)
+        return try JSONDecoder().decode(LevelData.self, from: data)
     } catch {
-        print("Failed to decode JSON:", error)
+        print("❌ Found file but failed to decode:", url.lastPathComponent, error)
         return nil
     }
 }
@@ -67,7 +77,7 @@ func loadAllLevels() -> [LevelData] {
         for file in jsonFiles {
             let fileName = file.deletingPathExtension().lastPathComponent
 
-            if let level = loadLevelData(named: "Levels/\(fileName)") {
+            if let level = loadLevelData(named: fileName) {
                 levels.append(level)
             } else {
                 print("Failed to load level: \(fileName)")

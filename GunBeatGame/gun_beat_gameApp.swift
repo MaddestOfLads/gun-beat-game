@@ -9,10 +9,9 @@ import SwiftUI
 
 @main
 struct gun_beat_gameApp: App {
-
     var body: some Scene {
         WindowGroup {
-            GameView(loadLevelData("Levels/1"))
+            RootView()
         }
     }
 }
