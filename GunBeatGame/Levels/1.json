@@ -5,7 +5,7 @@
   "songBPM": 200.0,
   "startingAmmo": 6,
   "ammoDivisor": 1,
-  "musicAssetName": "Music/awesome funky fight music.wav",
+  "musicAssetName": "awesome funky fight music",
   "backgroundAssetName": "bg_city",
   "coverAssetName": "cover_1",
   "bubbles": [

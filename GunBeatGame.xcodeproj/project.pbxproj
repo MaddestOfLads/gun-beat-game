@@ -29,9 +29,30 @@
 		A1048AC02E9EA74C003508CD /* GunBeatGameUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GunBeatGameUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		A1AB24D32F16AF64002C0022 /* Exceptions for "GunBeatGame" folder in "GunBeatGameTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"Music/awesome funky fight music.wav",
+			);
+			target = A1048AB52E9EA74C003508CD /* GunBeatGameTests */;
+		};
+		A1AB24D42F16AF64002C0022 /* Exceptions for "GunBeatGame" folder in "GunBeatGameUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"Music/awesome funky fight music.wav",
+			);
+			target = A1048ABF2E9EA74C003508CD /* GunBeatGameUITests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		A1048AAB2E9EA747003508CD /* GunBeatGame */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				A1AB24D32F16AF64002C0022 /* Exceptions for "GunBeatGame" folder in "GunBeatGameTests" target */,
+				A1AB24D42F16AF64002C0022 /* Exceptions for "GunBeatGame" folder in "GunBeatGameUITests" target */,
+			);
 			path = GunBeatGame;
 			sourceTree = "<group>";
 		};

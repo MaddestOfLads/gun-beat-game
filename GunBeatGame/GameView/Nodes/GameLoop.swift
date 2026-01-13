@@ -33,6 +33,7 @@ class GameLoop : Node, ObservableObject{
     init(levelData : LevelData) {
         super.init()
         loadLevelData(levelData: levelData)
+        setupAudioSession()
         spawnLevelUI()
         let dt = 1.0 / FPS
         let db = dt * (self.bpm / 60.0)
@@ -46,16 +47,31 @@ class GameLoop : Node, ObservableObject{
     {
         addChild(gunButton)
     }
+    
+    func setupAudioSession()
+    {
+        do {
+            let session = AVAudioSession.sharedInstance()
+            try session.setCategory(.playback, mode: .default)
+            try session.setActive(true)
+        } catch {
+            print("Audio session error:", error)
+        }
+    }
 
     //TODO: add a song restart button to call this function
     func startOrRestartSong() {
-			beat = 0.0
-        //TODO: play/restart the level's song
+        beat = 0.0
+        song_player.stop()
+        print("Playing song")
+        song_player.play(atTime: 0.0)
         //TODO: destroy all spawned bubbles
     }
 
     func loadLevelData(levelData : LevelData)
     {
+        /**
+         
         let parts = levelData.musicAssetName.split(separator: "/").map(String.init)
         let last = parts.last ?? levelData.musicAssetName
         let subdir = parts.count > 1 ? parts.dropLast().joined(separator: "/") : nil
@@ -63,17 +79,20 @@ class GameLoop : Node, ObservableObject{
         let fileParts = last.split(separator: ".", maxSplits: 1).map(String.init)
         let name = fileParts.first ?? last
         let ext  = fileParts.count == 2 ? fileParts[1] : "wav"
-
-        if let url = Bundle.main.url(forResource: name, withExtension: ext, subdirectory: subdir) {
+         */
+        
+        if let url = Bundle.main.url(forResource: levelData.musicAssetName, withExtension: "wav") {
             do {
+                print("Audio file loaded successfully", levelData.musicAssetName)
                 song_player = try AVAudioPlayer(contentsOf: url)
                 song_player.prepareToPlay()
             } catch {
                 print("❌ AVAudioPlayer init failed:", error)
             }
         } else {
-            print("❌ Could not find audio file:", subdir ?? "(root)", "\(name).\(ext)")
+            print("❌ Could not find audio file:", levelData.musicAssetName)
         }
+        
         // DO NOT return; let bubbles load regardless
 
 		// Load bubbles
