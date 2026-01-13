@@ -23,7 +23,8 @@ class PackedBubble {
         color: Color = Color.blue)
         //TODO: replace gunBarrelPositionY with a reference (this constant 0.8 is messy)
     {
-        self.spawnBeat = targetBeat - (gunBarrelPositionY - spawnPosY) * speed
+        self.spawnBeat = targetBeat - Double(gunBarrelPositionY - spawnPosY) / speed
+        self.spawnBeat = max(0.0, self.spawnBeat)
         self.speed = speed
         self.width = width
         self.height = height

@@ -161,8 +161,8 @@ struct LevelCard: View {
       Spacer()
 
         NavigationLink {
-          GameplayView()
-        } label: {
+          GameView(levelData: level)
+        } label: { 
           Image(systemName: "play.fill")
             .padding(14)
             .background(Color.green, in: Circle())

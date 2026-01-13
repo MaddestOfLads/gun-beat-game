@@ -1,31 +1,24 @@
+
+
 import SwiftUI
 
-#Preview {
-    GameView()
-}
-
-//GameView: responsible for rendering (drawing) game objects
 struct GameView: View {
-    
-    //Most game logic happens inside gameLoop.
-    //This constructor kickstarts everything.
+    let levelData: LevelData
+    @StateObject private var gameLoop: GameLoop
 
-
-	init(levelData : LevelData){
-		self.levelData = levelData
-	}
-	let levelData : LevelData
-    @ObservedObject var gameLoop = GameLoop(levelData)
+    init(levelData: LevelData) {
+        self.levelData = levelData
+        _gameLoop = StateObject(wrappedValue: GameLoop(levelData: levelData))
+    }
 
     var body: some View {
-        //View should automatically update when gameLoop triggers the next frame
-        GeometryReader{geo in
+        GeometryReader { geo in
             ZStack {
+                Color.black.ignoresSafeArea()
                 gameLoop.drawSelfThenChildren(in: geo.size)
             }
         }
     }
-
 }
 
 
