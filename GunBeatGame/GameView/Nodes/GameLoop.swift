@@ -256,11 +256,35 @@ class GameLoop : Node, ObservableObject{
         else
         {
             missed_score -= change_amount
-            if missed_score > 
+            if (missed_score > missedScoreThresholdForFailure)
+            {
+                loseLevel()
+            }
         }
         scoreCounter.text = current_score
     }
 
-    //TODO: score counter
-    //TODO: improve bubble pop animation
+    func loseLevel() {
+        // TODO
+    }
+
+    /**
+        TODO: beating a level
+            - should trigger when there's no bubbles spawned AND id of next bubble to spawn == packed bubble count
+            - fade to black
+            - return to level view
+        TODO: losing a level
+            - 1 second of white noise
+            - restart level
+        TODO: vfx!!!
+            - maybe make a vfx node when gun is fired?
+            - pulse ui on bubble pop
+            - shake ui on letting a bubble pass
+            - background noise on level loss
+        TODO: sfx!!!
+            - on bubble pop
+            - on firing a missed shot
+            - on letting a bubble pass
+            - on level loss: spawn white noise idk
+    */
 }

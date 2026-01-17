@@ -19,7 +19,7 @@ class PackedBubble {
         speed: Double = 0.5,
         width : CGFloat = 0.1,
         height : CGFloat = 0.05,
-        hitMargin : CGFloat = 0.1,
+        hitMargin : CGFloat = 0.03,
         color: Color = Color.blue)
         //TODO: replace gunBarrelPositionY with a reference (this constant 0.8 is messy)
     {
