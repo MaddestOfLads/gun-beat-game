@@ -113,6 +113,9 @@ class GameLoop : Node, ObservableObject{
         indexOfNextBubbleToSpawn = 0
 
         print("Playing song")
+        if song_player.isPlaying() {
+            song_player.pause()
+        }
         song_player.currentTime = 0.0
         song_player.play()
     }

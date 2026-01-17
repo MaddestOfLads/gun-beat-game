@@ -14,103 +14,103 @@
   "coverAssetName": "cover_1",
   "bubbles": [
     {
-      "targetBeat": 4.0,
+      "targetBeat": 16.0,
       "size": 0.05,
       "speed": 0.2,
       "color": { "r": 0, "g": 0, "b": 255 }
     },
     {
-      "targetBeat": 4.5,
+      "targetBeat": 18.0,
       "size": 0.05,
       "speed": 0.2,
       "color": { "r": 0, "g": 0, "b": 255 }
     },
     {
-      "targetBeat": 5,
+      "targetBeat": 20.0,
       "size": 0.05,
       "speed": 0.2,
       "color": { "r": 0, "g": 0, "b": 255 }
     },
     {
-      "targetBeat": 5.5,
+      "targetBeat": 22.0,
       "size": 0.05,
       "speed": 0.2,
       "color": { "r": 0, "g": 0, "b": 255 }
     },
     {
-      "targetBeat": 6.0,
+      "targetBeat": 24.0,
       "size": 0.05,
       "speed": 0.2,
       "color": { "r": 255, "g": 255, "b": 0 }
     },
     {
-      "targetBeat": 6.25,
+      "targetBeat": 25.0,
       "size": 0.05,
       "speed": 0.2,
       "color": { "r": 255, "g": 255, "b": 0 }
     },
     {
-      "targetBeat": 6.5,
+      "targetBeat": 26.0,
       "size": 0.05,
       "speed": 0.2,
       "color": { "r": 255, "g": 255, "b": 0 }
     },
     {
-      "targetBeat": 6.75,
+      "targetBeat": 27.0,
       "size": 0.05,
       "speed": 0.2,
       "color": { "r": 255, "g": 255, "b": 0 }
     },
     {
-      "targetBeat": 7,
+      "targetBeat": 28.0,
       "size": 0.05,
       "speed": 0.2,
       "color": { "r": 255, "g": 0, "b": 0 }
     },
     {
-      "targetBeat": 7.125,
+      "targetBeat": 28.5,
       "size": 0.05,
       "speed": 0.2,
       "color": { "r": 255, "g": 0, "b": 0 }
     },
     {
-      "targetBeat": 7.25,
+      "targetBeat": 29.0,
       "size": 0.3,
       "speed": 0.2,
       "color": { "r": 255, "g": 0, "b": 0 }
     },
     {
-      "targetBeat": 7.375,
+      "targetBeat": 29.5,
       "size": 0.3,
       "speed": 0.2,
       "color": { "r": 255, "g": 0, "b": 0 }
     },
     {
-      "targetBeat": 7.5,
+      "targetBeat": 30.0,
       "size": 0.05,
       "speed": 0.2,
       "color": { "r": 255, "g": 0, "b": 0 }
     },
     {
-      "targetBeat": 7.625,
+      "targetBeat": 30.5,
       "size": 0.05,
       "speed": 0.2,
       "color": { "r": 255, "g": 0, "b": 0 }
     },
     {
-      "targetBeat": 7.75,
+      "targetBeat": 31.0,
       "size": 0.05,
       "speed": 0.2,
       "color": { "r": 255, "g": 0, "b": 0 }
     },
     {
-      "targetBeat": 7.875,
+      "targetBeat": 31.5,
       "size": 0.05,
       "speed": 0.2,
       "color": { "r": 255, "g": 0, "b": 0 }
     },
     {
-      "targetBeat": 8.0,
+      "targetBeat": 32.0,
       "size": 0.05,
       "speed": 0.2,
       "color": { "r": 0, "g": 255, "b": 0 }
