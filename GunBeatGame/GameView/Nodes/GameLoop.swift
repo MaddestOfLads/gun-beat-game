@@ -143,7 +143,7 @@ class GameLoop : Node, ObservableObject{
             print("❌ Could not find audio file:", levelData.musicAssetName)
         }
         
-        let bpm = levelData.songBPM
+        self.bpm = levelData.songBPM
 
 		// Load bubbles
         for bubble in levelData.bubbles {
