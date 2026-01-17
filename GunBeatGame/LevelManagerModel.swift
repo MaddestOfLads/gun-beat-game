@@ -29,8 +29,8 @@ struct LevelData: Codable, Identifiable {
 
 struct Bubble: Codable {
     let targetBeat: Float
-    let size: Float //IN SCREENS!!
-    let speed: Float // SCREENS PER BEAT
+    let size: Float = 0.05 //IN SCREENS!!
+    let speed: Float = 0.2 // SCREENS PER BEAT
     let color: RGBColor
 }
 
