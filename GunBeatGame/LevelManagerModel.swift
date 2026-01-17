@@ -42,7 +42,7 @@ struct RGBColor: Codable {
 
 
 
-func loadLevelData(named fileName: String) -> LevelData? {
+func loadLevelData(fileName: String) -> LevelData? {
     let clean = fileName.replacingOccurrences(of: ".json", with: "")
 
     let candidates: [URL?] = [

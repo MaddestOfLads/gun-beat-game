@@ -8,6 +8,7 @@ class GameLoop : Node, ObservableObject{
 
     @Published var frame : Int = 0 //Frame number; changing this triggers view updates
     let FPS : Double = 60.0
+    let MAX_SCORE_PER_BUBBLE : Int = 100
     var bpm : Double = 120.0 //Varies from song to song
     var beat: Double = 0.0
         //Time measured in beats. Resets on song restart.
@@ -201,6 +202,10 @@ class GameLoop : Node, ObservableObject{
             isPaused = false;
             song_player.play()
         }
+    }
+
+    func changeScore(change_amount : float) {
+
     }
 
     //TODO: pause button

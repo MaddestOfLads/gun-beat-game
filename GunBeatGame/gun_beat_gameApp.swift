@@ -11,7 +11,7 @@ import SwiftUI
 struct gun_beat_gameApp: App {
     var body: some Scene {
         WindowGroup {
-            RootView()
+            GameView(levelData: loadLevelData(fileName: "1.json")!)
         }
     }
 }
