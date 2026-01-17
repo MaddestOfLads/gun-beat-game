@@ -21,6 +21,9 @@ class GameLoop : Node, ObservableObject{
 
 	var song_player : AVAudioPlayer!
 
+    var current_score : int = 0
+    var missed_score : int = 0
+
     lazy var gunButton: ButtonNode = {
         let button = ButtonNode(
             position: CGPoint(x:0.7, y:0.8),
@@ -135,8 +138,6 @@ class GameLoop : Node, ObservableObject{
             print("❌ Could not find audio file:", levelData.musicAssetName)
         }
         
-        // DO NOT return; let bubbles load regardless
-
 		// Load bubbles
         for bubble in levelData.bubbles {
 
@@ -200,6 +201,7 @@ class GameLoop : Node, ObservableObject{
             song_player.play()
         }
     }
+    
     //TODO: pause button
     //TODO: restart button
     //TODO: score counter

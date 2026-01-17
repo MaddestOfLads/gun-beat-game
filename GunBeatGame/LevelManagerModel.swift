@@ -15,6 +15,13 @@ struct LevelData: Codable, Identifiable {
     let bubbles: [Bubble]
     let startingAmmo: Int 
     let ammoDivisor: Int
+    let scoreFor1StarRating: Int
+    let scoreFor2StarRating: Int
+    let scoreFor3StarRating: Int
+    let missedScoreThresholdForFailure : Int
+        // If at any point your score DECREASES by a total equivalent to this amount, you lose.
+        // Example: if threshold for failure is 150, and your highest score 
+        // you instantly fail the level.
     let musicAssetName: String
     let backgroundAssetName: String
     let coverAssetName: String
