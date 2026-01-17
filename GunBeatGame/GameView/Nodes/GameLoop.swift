@@ -58,13 +58,14 @@ class GameLoop : Node, ObservableObject{
     }()
 
     lazy var scoreCounter : TextNode = {
-        let text = TextNode(
+        let counter = TextNode(
             position: CGPoint(x: 0.7, y: 0.6),
             dimensions: CGSize(width: 0.2, height: 0.05),
             color: Color.black,
             text: ""
         )
-    }
+        return counter
+    }()
     
     init(levelData : LevelData) {
         super.init()
@@ -201,7 +202,7 @@ class GameLoop : Node, ObservableObject{
             song_player.play()
         }
     }
-    
+
     //TODO: pause button
     //TODO: restart button
     //TODO: score counter
