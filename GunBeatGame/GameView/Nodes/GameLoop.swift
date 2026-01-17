@@ -102,7 +102,6 @@ class GameLoop : Node, ObservableObject{
     }
 
     func startOrRestartSong() {
-        song_player.stop()
         
         for child in children{
             if let bubble = child as? BubbleNode {
@@ -112,9 +111,9 @@ class GameLoop : Node, ObservableObject{
         
         beat = 0.0
         indexOfNextBubbleToSpawn = 0
+
         print("Playing song")
-        song_player.play(atTime: 0.0)
-        song_player.pause()
+        song_player.currentTime = 0.0
         song_player.play()
     }
 
@@ -130,7 +129,6 @@ class GameLoop : Node, ObservableObject{
         let name = fileParts.first ?? last
         let ext  = fileParts.count == 2 ? fileParts[1] : "wav"
          */
-        print("It works")
         if let url = Bundle.main.url(forResource: levelData.musicAssetName, withExtension: "wav") {
             do {
                 print("Audio file loaded successfully", levelData.musicAssetName)
@@ -143,6 +141,7 @@ class GameLoop : Node, ObservableObject{
             print("❌ Could not find audio file:", levelData.musicAssetName)
         }
         
+        // Set bpm
         self.bpm = levelData.songBPM
 
 		// Load bubbles
