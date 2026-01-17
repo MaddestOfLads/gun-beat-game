@@ -53,6 +53,15 @@ class GameLoop : Node, ObservableObject{
         )
         return button
     }()
+
+    lazy var scoreCounter : TextNode = {
+        let text = TextNode(
+            position: CGPoint(x: 0.7, y: 0.6),
+            dimensions: CGSize(width: 0.2, height: 0.05),
+            color: Color.black,
+            text: ""
+        )
+    }
     
     init(levelData : LevelData) {
         super.init()
@@ -87,13 +96,18 @@ class GameLoop : Node, ObservableObject{
         }
     }
 
-    //TODO: add a song restart button to call this function
     func startOrRestartSong() {
         beat = 0.0
         song_player.stop()
+        
+        for child in children{
+            if let bubble = child as? BubbleNode {
+                removeChild(bubble)
+            }
+        }
+        
         print("Playing song")
         song_player.play(atTime: 0.0)
-        //TODO: figure out why it's not PLAYING
     }
 
     func loadLevelData(levelData : LevelData)

@@ -9,7 +9,7 @@ class TextNode: Node {
     var dimensions: CGSize //relative to screen size
     var position: CGPoint //relative to screen size
 
-    init(position: CGPoint, dimensions: CGSize, color: Color, text: String) {
+    init(position: CGPoint, dimensions: CGSize, color: Color, text: String = "") {
         self.position = position
         self.dimensions = dimensions
         self.color = color
