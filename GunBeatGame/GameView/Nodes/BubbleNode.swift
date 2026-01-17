@@ -1,12 +1,8 @@
 import SwiftUI
 
-class BubbleNode : Node{
+class BubbleNode : VfxCapableNode{
     
     let SPAWN_POS : CGPoint = CGPoint(x: 0.35, y: -0.5)
-    
-    var size : CGSize
-    var position : CGPoint
-    var color : Color
     
     //variables for controlling the pop animation:
     let POP_ANIMATION_TIME : Double = 0.4
@@ -15,8 +11,6 @@ class BubbleNode : Node{
     var opacity : Double = 1.0
     var popped_x_speed : Double = -0.4
 
-
-    
     var speed : Double //Measured in screens per beat
 
     var hitMargin : CGFloat //Margin used to accept imperfect hits with a lesser score
@@ -24,11 +18,10 @@ class BubbleNode : Node{
     init(pb: PackedBubble) // Constructor
     //Creates the bubble node from the packedBubble (which only stores bubble data)
     {
+        super.init(position: SPAWN_POS, color: pb.color, size : CGSize(width: pb.width, height: pb.height))
         self.position = SPAWN_POS
         self.speed = pb.speed
-        self.size = CGSize(width: pb.width, height: pb.height)
         self.hitMargin = pb.hitMargin
-        self.color = pb.color
     }
 
     override func physicsProcess(dt : Double, db : Double)
@@ -50,9 +43,9 @@ class BubbleNode : Node{
     //Renders the bubble; called by parent node
     {
         return AnyView(Rectangle()
-            .fill(color)
-            .frame(width: size.width * canvasSize.width, height: size.height * canvasSize.height)
-            .position(x: position.x * canvasSize.width, y: position.y * canvasSize.height)
+            .fill(color.mix(with: vfx_color, by: vfx_color_blend_amount))
+            .frame(width: size.width * vfx_dimensions_multiplier.width * canvasSize.width, height: size.height * vfx_dimensions_multiplier.height * canvasSize.height)
+            .position(x: (position.x + vfx_position_offset.x) * canvasSize.width, y: (position.y + vfx_position_offset.y) * canvasSize.height)
             .opacity(opacity)
         )
     }

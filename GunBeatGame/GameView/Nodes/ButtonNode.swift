@@ -12,19 +12,14 @@
 
 import SwiftUI
 
-class ButtonNode: Node {
-    var text: String
-    var color: Color
+class ButtonNode: VfxCapableNode{
+
     var onPressed: (() -> Void)?
-    var dimensions: CGSize //relative to screen size
-    var position: CGPoint //relative to screen size
     let cornerRadius: CGFloat = 8.0;
+    var text: String
 
     init(position: CGPoint, dimensions: CGSize, color: Color, text: String, onPressed: (() -> Void)? = nil) {
-        //TODO: add an optional image argument or sth
-        self.position = position
-        self.dimensions = dimensions
-        self.color = color
+        super.init(position: position, dimensions: dimension, color: color)
         self.text = text
         self.onPressed = onPressed
     }
@@ -35,15 +30,15 @@ class ButtonNode: Node {
                 self.onPressed?()
             }) {
                 Text(text)
-                    .frame(width: size.width * dimensions.width,
-                        height: size.height * dimensions.height)
-                    .background(self.color)
+                    .frame(width: size.width * dimensions.width * vfx_dimensions_multiplier.width,
+                        height: size.height * dimensions.height * vfx_dimensions_multiplier.height)
+                    .background(self.color.mix(with: vfx_color, by: vfx_color_blend_amount))
                     .foregroundColor(Color.black)
                     .cornerRadius(self.cornerRadius)
             }
             .position(
-                x: position.x * size.width,
-                y: position.y * size.height
+                x: (position.x + vfx_position_offset.x) * size.width,
+                y: (position.y + vfx_position_offset.y) * size.height
             )
         )
     }
