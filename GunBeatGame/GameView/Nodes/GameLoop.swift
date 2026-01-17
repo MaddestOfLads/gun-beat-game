@@ -113,7 +113,7 @@ class GameLoop : Node, ObservableObject{
         beat = 0.0
         indexOfNextBubbleToSpawn = 0
         print("Playing song")
-        song_player.play(playAt: 0.0)
+        song_player.play(atTime: 0.0)
         song_player.pause()
         song_player.play()
     }
