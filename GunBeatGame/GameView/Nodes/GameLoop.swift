@@ -9,11 +9,12 @@ class GameLoop : Node, ObservableObject{
     @Published var frame : Int = 0 //Frame number; changing this triggers view updates
     let FPS : Double = 60.0
     let MAX_SCORE_PER_BUBBLE : Int = 100
+    let BUBBLE_POP_HEIGHT : Float = 0.8
     var bpm : Double = 120.0 //Varies from song to song
     var beat: Double = 0.0
         //Time measured in beats. Resets on song restart.
     
-    var isPaused : Bool = false
+    @Published var isPaused : Bool = false // Published to trigger view updates on pause (because frame won't change duh)
 
     var frameTimer : Timer?
 
@@ -22,8 +23,10 @@ class GameLoop : Node, ObservableObject{
 
 	var song_player : AVAudioPlayer!
 
-    var current_score : Int = 0
-    var missed_score : Int = 0
+    var current_score : Float = 0
+    var missed_score : Float = 0
+    let MISSED_SCORE_HEAL_AMOUNT : Float = 0.2 // Restore this much missed score for every 1pt of gained score
+    var missedScoreThresholdForFailure : Float = 200.0
 
     lazy var gunButton: ButtonNode = {
         let button = ButtonNode(
@@ -49,7 +52,7 @@ class GameLoop : Node, ObservableObject{
     
     lazy var restartButton: ButtonNode = {
         let button = ButtonNode(
-            position: CGPoint(x:0.85, y:0.05),
+            position: CGPoint(x:0.95, y:0.15),
             dimensions: CGSize(width:0.1, height:0.1),
             color: Color.brown,
             text: "Restart",
@@ -144,8 +147,8 @@ class GameLoop : Node, ObservableObject{
             print("❌ Could not find audio file:", levelData.musicAssetName)
         }
         
-        // Set bpm
         self.bpm = levelData.songBPM
+        self.missedScoreThresholdForFailure = Float(levelData.missedScoreThresholdForFailure)
 
 		// Load bubbles
         for bubble in levelData.bubbles {
@@ -189,20 +192,54 @@ class GameLoop : Node, ObservableObject{
         }
     }
 
+    // if multiple bubbles hit: accept only the ones that were hit perfectly
+        // if none were hit perfectly: accept the one with the highest score
+    // 
     func fireGun() {
+        bubblesInHitRange : [BubbleNode] = []
+        
         for child in children{
             if let bubble = child as? BubbleNode {
-                if (bubble.hitAccuracy(popHeight: 0.8) > 0) {
-                    bubble.getHit()
+                var accuracy : Float = bubble.hitAccuracy(popHeight: BUBBLE_POP_HEIGHT)
+                if (accuracy > 0) {
+                    bubblesInHitRange.append(bubble)
                 }
             }
         }
+        bubblesHitPerfectly : [Bubblenode] = []
+        for bubble in bubblesInHitRange{
+            if bubble.hitAccuracy(popHeight: BUBBLE_POP_HEIGHT) == 1.0 {
+                bubblesHitPerfectly.append(bubble)
+            }
+        }
+
+        if bubblesHitPerfectly.count > 0 { 
+            for bubble in bubblesHitPerfectly{
+                popBubble(bubble)
+            }
+        }
+        else if bubblesInHitRange.count > 0 {
+            bubblesInHitRange = bubblesInHitRange.sorted {$0.hitAccuracy(popHeight : BUBBLE_POP_HEIGHT) > $1.hitAccuracy(popHeight : BUBBLE_POP_HEIGHT)}
+            popBubble(bubblesInHitRange[0])
+        }
+        else
+        {
+            changeScore(-MAX_SCORE_PER_BUBBLE)
+        }
+    }
+
+    func popBubble(bubble : BubbleNode){
+        val hit_accuracy : Float = bubble.hitAccuracy(popHeight: BUBBLE_POP_HEIGHT)
+        val added_score : Float = ceil(hit_accuracy * Float(MAX_SCORE_PER_BUBBLE))
+        changeScore(added_score)
+        bubble.getHit()
     }
 
     func togglePause() {
         if(!isPaused){
             pauseButton.text = "Resume"
-            isPaused = true
+            isPaused = true // set after pauseButton text change to trigger a view update
+            drawSelfThenChildren()
             song_player.pause()
         }else{
             pauseButton.text = "Pause"
@@ -212,14 +249,18 @@ class GameLoop : Node, ObservableObject{
     }
 
     func changeScore(change_amount : Float) {
-
+        if (change_amount >= 0) {
+            current_score += change_amount
+            missed_score -= change_amount * 
+        }
+        else
+        {
+            missed_score -= change_amount
+            if missed_score > 
+        }
+        scoreCounter.text = current_score
     }
 
-    //TODO: pause button
-    //TODO: restart button
     //TODO: score counter
-    //TODO: music
     //TODO: improve bubble pop animation
-
-
 }

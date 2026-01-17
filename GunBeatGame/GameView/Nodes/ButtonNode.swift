@@ -12,11 +12,15 @@
 
 import SwiftUI
 
-class ButtonNode: VfxCapableNode{
+class ButtonNode: VfxCapableNode, ObservableObject{
 
     var onPressed: (() -> Void)?
     let cornerRadius: CGFloat = 8.0;
-    var text: String
+    var text: String {
+        didSet {
+            objectWillChange.send()
+        }
+    }
 
     init(position: CGPoint, dimensions: CGSize, color: Color, text: String, onPressed: (() -> Void)? = nil) {
         super.init(position: position, dimensions: dimension, color: color)
