@@ -43,6 +43,17 @@ class GameLoop : Node, ObservableObject{
         return button
     }()
     
+    lazy var restartButton: ButtonNode = {
+        let button = ButtonNode(
+            position: CGPoint(x:0.85, y:0.05),
+            dimensions: CGSize(width:0.1, height:0.1),
+            color: Color.brown,
+            text: "Restart",
+            onPressed: { self.startOrRestartSong() }
+        )
+        return button
+    }()
+    
     init(levelData : LevelData) {
         super.init()
         loadLevelData(levelData: levelData)
@@ -61,6 +72,8 @@ class GameLoop : Node, ObservableObject{
     func spawnLevelUI()
     {
         addChild(gunButton)
+        addChild(pauseButton)
+        addChild(restartButton)
     }
     
     func setupAudioSession()
