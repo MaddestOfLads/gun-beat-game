@@ -35,7 +35,7 @@ class GameLoop : Node, ObservableObject{
         )
         return button
     }()
-    /*
+    
     lazy var pauseButton: ButtonNode = {
         let button = ButtonNode(
             position: CGPoint(x:0.95, y:0.05),
@@ -67,7 +67,6 @@ class GameLoop : Node, ObservableObject{
         )
         return counter
     }()
-    */
     
     init(levelData : LevelData) {
         super.init()
@@ -87,10 +86,8 @@ class GameLoop : Node, ObservableObject{
     func spawnLevelUI()
     {
         addChild(gunButton)
-        /*
         addChild(pauseButton)
         addChild(restartButton)
-        */
     }
     
     func setupAudioSession()
