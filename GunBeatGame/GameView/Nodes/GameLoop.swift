@@ -102,7 +102,6 @@ class GameLoop : Node, ObservableObject{
     }
 
     func startOrRestartSong() {
-        beat = 0.0
         song_player.stop()
         
         for child in children{
@@ -111,6 +110,8 @@ class GameLoop : Node, ObservableObject{
             }
         }
         
+        beat = 0.0
+        indexOfNextBubbleToSpawn = 0
         print("Playing song")
         song_player.play(atTime: 0.0)
     }
