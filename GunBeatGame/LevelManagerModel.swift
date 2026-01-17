@@ -84,7 +84,7 @@ func loadAllLevels() -> [LevelData] {
         for file in jsonFiles {
             let fileName = file.deletingPathExtension().lastPathComponent
 
-            if let level = loadLevelData(named: fileName) {
+            if let level = loadLevelData(fileName: fileName) {
                 levels.append(level)
             } else {
                 print("Failed to load level: \(fileName)")

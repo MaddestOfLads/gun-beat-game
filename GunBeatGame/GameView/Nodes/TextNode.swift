@@ -21,11 +21,9 @@ class TextNode: Node {
             Text(text)
                 .frame(width: size.width * dimensions.width,
                     height: size.height * dimensions.height)
-                .background(self.color)
-                .foregroundColor(Color.black)
-                .cornerRadius(self.cornerRadius)
-                .position(width: position.x * size.width
-                height: position.y * size.height)
+                .foregroundColor(self.color)
+                .position(x: position.x * size.width,
+                y: position.y * size.height)
         )
     }
 }

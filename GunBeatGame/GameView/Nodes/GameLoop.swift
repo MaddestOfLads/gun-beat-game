@@ -22,8 +22,8 @@ class GameLoop : Node, ObservableObject{
 
 	var song_player : AVAudioPlayer!
 
-    var current_score : int = 0
-    var missed_score : int = 0
+    var current_score : Int = 0
+    var missed_score : Int = 0
 
     lazy var gunButton: ButtonNode = {
         let button = ButtonNode(
@@ -76,7 +76,7 @@ class GameLoop : Node, ObservableObject{
         let dt = 1.0 / FPS
         let db = dt * (self.bpm / 60.0)
         frameTimer = Timer.scheduledTimer(withTimeInterval: dt, repeats: true) { _ in
-            if(!isPaused) {
+            if(!self.isPaused) {
                 self.physicsProcessSelfThenChildren(dt: dt, db: db)
             }
         }
@@ -127,7 +127,7 @@ class GameLoop : Node, ObservableObject{
         let name = fileParts.first ?? last
         let ext  = fileParts.count == 2 ? fileParts[1] : "wav"
          */
-        
+        print("It works")
         if let url = Bundle.main.url(forResource: levelData.musicAssetName, withExtension: "wav") {
             do {
                 print("Audio file loaded successfully", levelData.musicAssetName)
@@ -204,7 +204,7 @@ class GameLoop : Node, ObservableObject{
         }
     }
 
-    func changeScore(change_amount : float) {
+    func changeScore(change_amount : Float) {
 
     }
 
