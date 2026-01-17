@@ -113,8 +113,8 @@ class GameLoop : Node, ObservableObject{
         beat = 0.0
         indexOfNextBubbleToSpawn = 0
         print("Playing song")
-        song_player.play()
         song_player.play(playAt: 0.0)
+        song_player.play()
     }
 
     func loadLevelData(levelData : LevelData)
