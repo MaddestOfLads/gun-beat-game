@@ -12,6 +12,8 @@ class GameLoop : Node, ObservableObject{
     var beat: Double = 0.0
         //Time measured in beats. Resets on song restart.
     
+    var isPaused : Bool = false
+
     var frameTimer : Timer?
 
     var packedBubbles : [PackedBubble] = []
@@ -29,6 +31,17 @@ class GameLoop : Node, ObservableObject{
         )
         return button
     }()
+
+    lazy var pauseButton: ButtonNode = {
+        let button = ButtonNode(
+            position: CGPoint(x:0.95, y:0.05),
+            dimensions: CGSize(width:0.1, height:0.1),
+            color: Color.brown,
+            text: "Pause",
+            onPressed: { self.togglePause() }
+        )
+        return button
+    }()
     
     init(levelData : LevelData) {
         super.init()
@@ -38,7 +51,9 @@ class GameLoop : Node, ObservableObject{
         let dt = 1.0 / FPS
         let db = dt * (self.bpm / 60.0)
         frameTimer = Timer.scheduledTimer(withTimeInterval: dt, repeats: true) { _ in
-            self.physicsProcessSelfThenChildren(dt: dt, db: db)
+            if(!isPaused) {
+                self.physicsProcessSelfThenChildren(dt: dt, db: db)
+            }
         }
         startOrRestartSong()
     }
@@ -65,7 +80,7 @@ class GameLoop : Node, ObservableObject{
         song_player.stop()
         print("Playing song")
         song_player.play(atTime: 0.0)
-        //TODO: destroy all spawned bubbles
+        //TODO: figure out why it's not PLAYING
     }
 
     func loadLevelData(levelData : LevelData)
@@ -128,7 +143,7 @@ class GameLoop : Node, ObservableObject{
         while indexOfNextBubbleToSpawn < packedBubbles.count &&
               beat > packedBubbles[indexOfNextBubbleToSpawn].spawnBeat {
 
-            print("✅ Spawning bubble at beat:", beat,
+            print("Spawning bubble at beat:", beat,
                   "spawnBeat:", packedBubbles[indexOfNextBubbleToSpawn].spawnBeat)
             print("beat:", beat, "count:", packedBubbles.count, "nextIdx:", indexOfNextBubbleToSpawn)
             let newBubble = BubbleNode(pb: packedBubbles[indexOfNextBubbleToSpawn])
@@ -144,6 +159,18 @@ class GameLoop : Node, ObservableObject{
                     bubble.getHit()
                 }
             }
+        }
+    }
+
+    func togglePause() {
+        if(!isPaused){
+            pauseButton.text = "Resume"
+            isPaused = true
+            song_player.pause()
+        }else{
+            pauseButton.text = "Pause"
+            isPaused = false;
+            song_player.play()
         }
     }
     //TODO: pause button
