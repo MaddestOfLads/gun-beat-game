@@ -70,7 +70,7 @@ class BubbleNode : VfxCapableNode{
             && popHeight > position.y - (scale.height/2) - hitMargin
         )
         {
-            return (hitMargin - abs(popHeight + (size.height/CGFloat(2.0)) - position.y))/hitMargin
+            return (hitMargin - abs(popHeight + (scale.height/CGFloat(2.0)) - position.y))/hitMargin
         }
         else {return 0.0}
     }
