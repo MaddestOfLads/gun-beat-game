@@ -12,8 +12,7 @@ class VfxCapableNode : Node {
     var vfx_scale_multiplier : CGSize = CGSize(width: 1.0, height: 1.0)
     
     var position: CGPoint //relative to screen size
-    var vfx_position_offset : CGPoint = CGPoint(x: 1.0, y: 1.0)
-
+    var vfx_position_offset : CGPoint = CGPoint(x: 0.0, y: 0.0)
 
     init(position: CGPoint, scale: CGSize, color: Color) {
         self.position = position
