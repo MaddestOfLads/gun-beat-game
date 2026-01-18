@@ -4,8 +4,8 @@
 class VfxCapableNode : Node {
     var color: Color
     var vfx_color: Color = Color.black
-    var vfx_color_blend_amount : Float // 0 to 1
-    var delta_color_blend: Float = -1.0 // How fast per second the currently applied effect(s) will decay
+    var vfx_color_blend_amount : Double // 0 to 1
+    var delta_color_blend: Double = -1.0 // How fast per second the currently applied effect(s) will decay
 
     var dimensions: CGSize //relative to screen size
     var vfx_dimensions_multiplier : CGSize = CGSize(width: 1.0, height: 1.0)
@@ -20,14 +20,14 @@ class VfxCapableNode : Node {
         self.color = color
     }
 
-    func updateVfx(dt : float) { // Should be ran once in physicsProcess; updates all VFX
+    func updateVfx(dt : Double) { // Should be ran once in physicsProcess; updates all VFX
         vfx_color_blend_amount = 
             min(1.0, 
             max(0.0, 
             vfx_color_blend_amount + (delta_color_blend * dt)))
     }
 
-    func pulseColor((pulse_time: Float, color: Color, fadeIn : Bool = false)){
+    func pulseColor((pulse_time: Double, color: Color, fadeIn : Bool = false)){
         vfx_color = color
         if(fadeIn){
             vfx_color_blend_amount = 0.0
@@ -38,3 +38,4 @@ class VfxCapableNode : Node {
         }
     }
 }
+
