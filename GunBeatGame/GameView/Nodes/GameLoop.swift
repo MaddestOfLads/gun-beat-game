@@ -231,7 +231,7 @@ class GameLoop : Node, ObservableObject{
     }
 
     func popBubble(bubble : BubbleNode){
-        var hit_accuracy : Float = bubble.hitAccuracy(popHeight: bubblePopHeight)
+        var hit_accuracy : Float = Float(bubble.hitAccuracy(popHeight: bubblePopHeight))
         var added_score : Float = ceil(hit_accuracy * Float(MAX_SCORE_PER_BUBBLE))
         changeScore(changeAmount: added_score)
         bubble.getHit()
@@ -244,7 +244,6 @@ class GameLoop : Node, ObservableObject{
         if(!isPaused){
             pauseButton.text = "Resume"
             isPaused = true // set after pauseButton text change to trigger a view update
-            drawSelfThenChildren()
             song_player.pause()
         }else{
             pauseButton.text = "Pause"
@@ -268,7 +267,7 @@ class GameLoop : Node, ObservableObject{
                 startLevelLossAnimation()
             }
         }
-        scoreCounter.text = current_score
+        scoreCounter.text = Strign(current_score)
     }
 
     func startLevelLossAnimation() {
@@ -294,7 +293,7 @@ class GameLoop : Node, ObservableObject{
     func areVictoryCriteriaFulfilled() -> Bool {
         if indexOfNextBubbleToSpawn < packedBubbles.count {return false}
         for child in children {
-            if let bubble = child as? bubbleNode {
+            if let bubble = child as? BubbleNode {
                 if !bubble.isPopped {return false}
             }
         }
