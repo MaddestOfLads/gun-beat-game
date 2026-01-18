@@ -28,10 +28,14 @@ class GameLoop : Node, ObservableObject{
     let MISSED_SCORE_HEAL_AMOUNT : Float = 0.2 // Restore this much missed score for every 1pt of gained score
     var missedScoreThresholdForFailure : Float = 200.0
 
-    var level_lost : Bool = false
+    var level_loss_animation_playing : Bool = false
     let LEVEL_LOSS_TIME : Double = 0.5
     var level_loss_time_left : Double = 0.5
 
+    var level_win_animation_playing : Bool = false
+    let LEVEL_WIN_TIME : Double = 2.0
+    var level_win_time_left : Double = 
+    
     lazy var gunButton: ButtonNode = {
         let button = ButtonNode(
             position: CGPoint(x:0.7, y:0.8),
@@ -109,7 +113,7 @@ class GameLoop : Node, ObservableObject{
     }
 
     func startOrRestartSong() {
-        level_lost = false
+        level_loss_animation_playing = false
 
         for child in children{
             if let bubble = child as? BubbleNode {
@@ -131,15 +135,6 @@ class GameLoop : Node, ObservableObject{
 
     func loadLevelData(levelData : LevelData)
     {
-        /**
-        let parts = levelData.musicAssetName.split(separator: "/").map(String.init)
-        let last = parts.last ?? levelData.musicAssetName
-        let subdir = parts.count > 1 ? parts.dropLast().joined(separator: "/") : nil
-
-        let fileParts = last.split(separator: ".", maxSplits: 1).map(String.init)
-        let name = fileParts.first ?? last
-        let ext  = fileParts.count == 2 ? fileParts[1] : "wav"
-         */
         if let url = Bundle.main.url(forResource: levelData.musicAssetName, withExtension: "wav") {
             do {
                 print("Audio file loaded successfully", levelData.musicAssetName)
@@ -239,6 +234,9 @@ class GameLoop : Node, ObservableObject{
         val added_score : Float = ceil(hit_accuracy * Float(MAX_SCORE_PER_BUBBLE))
         changeScore(added_score)
         bubble.getHit()
+        if(areVictoryCriteriaFulfilled()) {
+            startLevelWinAnimation()
+        }
     }
 
     func togglePause() {
@@ -284,7 +282,7 @@ class GameLoop : Node, ObservableObject{
     }
     
     func progressLevelLossAnimationIfLost(dt : Double){
-        if(level_lost){
+        if(level_loss_animation_playing){
             level_loss_time_left -= dt
             if (level_loss_time_left <= 0.0){
                 startOrRestartSong()
@@ -292,15 +290,41 @@ class GameLoop : Node, ObservableObject{
         }
     }
 
+    func areVictoryCriteriaFulfilled() -> Bool {
+        if indexOfNextBubbleToSpawn < packedBubbles.count {return false}
+        for child in children {
+            if let bubble = child as? bubbleNode {
+                if !bubble.isPopped {return false}
+            }
+        }
+        return true;
+    }
+
+    func startLevelWinAnimation(){
+        song_player.stop()
+        level_win_animation_playing = true
+        level_win_time_left = LEVEL_WIN_TIME
+    }
+
+    func progressLevelWinAnimationIfWon(dt: Double){
+        level_win_time_left -= dt
+        if level_win_time_left <= 0{
+            returnVictorious()
+        }
+    }
+
+    func returnVictorious(){
+        // TODO: make this method return to main menu and update the player database
+        print("Victory!")
+    }
 
     /**
         TODO: beating a level
-            - should trigger when there's no bubbles spawned AND id of next bubble to spawn == packed bubble count
+            should trigger when there's no bubbles spawned AND id of next bubble to spawn == packed bubble count - DONE
             - fade to black
             - return to level view
-        TODO: losing a level
-            - 1 second of white noise
-            - restart level
+        losing a level - DONE
+            All VFX nodes flash red, level restarts after 0.5s
         TODO: vfx!!!
             - maybe make a vfx node when gun is fired?
             - pulse ui on bubble pop
