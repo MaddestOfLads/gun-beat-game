@@ -70,7 +70,7 @@ class BubbleNode : VfxCapableNode{
             && popHeight > position.y - (scale.height/2) - hitMargin
         )
         {
-            return (hitMargin - abs(popHeight + (size.height/2) - position.y))/hitMargin
+            return (hitMargin - abs(popHeight + (size.height/CGFloat(2.0)) - position.y))/hitMargin
         }
         else {return 0.0}
     }
@@ -78,6 +78,6 @@ class BubbleNode : VfxCapableNode{
     func getHit()
     {
         isPopped = true
-        pulseColor(pulseTime: 0.5, color: Color.white)
+        pulseColor(: 0.5, color: Color.white)
     }
 }
