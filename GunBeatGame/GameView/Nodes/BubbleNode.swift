@@ -78,6 +78,6 @@ class BubbleNode : VfxCapableNode{
     func getHit()
     {
         isPopped = true
-        pulseColor(pulseTime: 0.5, color: Color.white, fadein: false)
+        pulseColor(pulseTime: 0.5, color: Color.white, fadeIn: false)
     }
 }
