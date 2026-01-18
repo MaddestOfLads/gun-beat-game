@@ -28,14 +28,14 @@ class VfxCapableNode : Node {
             vfx_color_blend_amount + (delta_color_blend * dt)))
     }
 
-    func pulseColor(pulse_time: Double, color: Color, fadeIn : Bool){
+    func pulseColor(pulseTime: Double, color: Color, fadeIn : Bool){
         vfx_color = color
         if(fadeIn){
             vfx_color_blend_amount = 0.0
-            delta_color_blend = 1.0/pulse_time
+            delta_color_blend = 1.0/pulseTime
         }else{
             vfx_color_blend_amount = 1.0
-            delta_color_blend = -1.0/pulse_time
+            delta_color_blend = -1.0/pulseTime
         }
     }
 }
