@@ -178,6 +178,13 @@ class GameLoop : Node, ObservableObject{
         packedBubbles = packedBubbles.sorted {$0.spawnBeat < $1.spawnBeat}
     }
 
+
+    override func draw(in size: CGSize) -> AnyView{
+        return AnyView(
+            Color.white
+        )
+    }
+
     override func physicsProcess(dt: Double, db: Double) {
         frame += 1
         beat += db
