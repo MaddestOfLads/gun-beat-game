@@ -319,17 +319,14 @@ class GameLoop : Node, ObservableObject{
     }
 
     /**
-        TODO: beating a level
-            should trigger when there's no bubbles spawned AND id of next bubble to spawn == packed bubble count - DONE
+        beating a level - HALF DONE
+            - triggers when there's no bubbles spawned AND id of next bubble to spawn == packed bubble count - DONE
             - fade to black
             - return to level view
         losing a level - DONE
             All VFX nodes flash red, level restarts after 0.5s
         TODO: vfx!!!
-            - maybe make a vfx node when gun is fired?
-            - pulse ui on bubble pop
-            - shake ui on letting a bubble pass
-            - background noise on level loss
+            - multiple pulse modes (fade in, fade out)
         TODO: sfx!!!
             - on bubble pop
             - on firing a missed shot
