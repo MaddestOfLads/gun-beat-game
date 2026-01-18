@@ -87,7 +87,7 @@ class GameLoop : Node, ObservableObject{
         let dt = 1.0 / FPS
         let db = dt * (self.bpm / 60.0)
         var loadingTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false){_ in
-            startPhysicsProcess(dt: dt, db: db)
+            self.startPhysicsProcess(dt: dt, db: db)
         }
     }
 
