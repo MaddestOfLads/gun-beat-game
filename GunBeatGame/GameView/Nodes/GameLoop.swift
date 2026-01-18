@@ -34,12 +34,12 @@ class GameLoop : Node, ObservableObject{
 
     var level_win_animation_playing : Bool = false
     let LEVEL_WIN_TIME : Double = 2.0
-    var level_win_time_left : Double = 
+    var level_win_time_left : Double = 2.0
     
     lazy var gunButton: ButtonNode = {
         let button = ButtonNode(
             position: CGPoint(x:0.7, y:0.8),
-            dimensions: CGSize(width:0.2, height:0.15),
+            scale: CGSize(width:0.2, height:0.15),
             color: Color.green,
             text: "Gun",
             onPressed: { self.fireGun() }
@@ -50,7 +50,7 @@ class GameLoop : Node, ObservableObject{
     lazy var pauseButton: ButtonNode = {
         let button = ButtonNode(
             position: CGPoint(x:0.95, y:0.05),
-            dimensions: CGSize(width:0.1, height:0.1),
+            scale: CGSize(width:0.1, height:0.1),
             color: Color.brown,
             text: "Pause",
             onPressed: { self.togglePause() }
@@ -61,7 +61,7 @@ class GameLoop : Node, ObservableObject{
     lazy var restartButton: ButtonNode = {
         let button = ButtonNode(
             position: CGPoint(x:0.95, y:0.15),
-            dimensions: CGSize(width:0.1, height:0.1),
+            scale: CGSize(width:0.1, height:0.1),
             color: Color.brown,
             text: "Restart",
             onPressed: { self.startOrRestartSong() }
@@ -72,7 +72,7 @@ class GameLoop : Node, ObservableObject{
     lazy var scoreCounter : TextNode = {
         let counter = TextNode(
             position: CGPoint(x: 0.7, y: 0.6),
-            dimensions: CGSize(width: 0.2, height: 0.05),
+            scale: CGSize(width: 0.2, height: 0.05),
             color: Color.black,
             text: ""
         )
@@ -125,7 +125,7 @@ class GameLoop : Node, ObservableObject{
         indexOfNextBubbleToSpawn = 0
 
         print("Playing song")
-        if song_player.isPlaying() {
+        if song_player.isPlaying {
             song_player.pause()
         }
         song_player.currentTime = 0.0
@@ -176,7 +176,7 @@ class GameLoop : Node, ObservableObject{
         frame += 1
         beat += db
         spawnBubbles()
-        progressLevelLossAnimationIfLost(dt)
+        progressLevelLossAnimationIfLost(dt:dt)
     }
     
     //Spawns next bubble if its spawn time has come
@@ -197,19 +197,19 @@ class GameLoop : Node, ObservableObject{
         // if none were hit perfectly: accept the one with the highest score
     // 
     func fireGun() {
-        bubblesInHitRange : [BubbleNode] = []
+        var bubblesInHitRange : [BubbleNode] = []
         
         for child in children{
             if let bubble = child as? BubbleNode {
-                var accuracy : Float = bubble.hitAccuracy(popHeight: BUBBLE_POP_HEIGHT)
-                if (accuracy > 0) {
+                var accuracy : Double = bubble.hitAccuracy(popHeight: CGFloat(BUBBLE_POP_HEIGHT))
+                if (accuracy > 0.0) {
                     bubblesInHitRange.append(bubble)
                 }
             }
         }
         bubblesHitPerfectly : [Bubblenode] = []
         for bubble in bubblesInHitRange{
-            if bubble.hitAccuracy(popHeight: BUBBLE_POP_HEIGHT) == 1.0 {
+            if bubble.hitAccuracy(popHeight: CGFloat(BUBBLE_POP_HEIGHT)) == 1.0 {
                 bubblesHitPerfectly.append(bubble)
             }
         }
