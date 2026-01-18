@@ -17,7 +17,8 @@ class Tween{
     var endValue : Double
     var shakeCycleCount : Double = 5.0 // Only for InterpolationMode.SHAKE. Higher value = faster shaking.
     var currentValue : Double
-    func init(
+    
+    init(
         animationMode : Tween.AnimationMode = AnimationMode.LINEAR,
         animationTime : Double = 1.0,
         startValue : Double = 0.0,
@@ -35,8 +36,8 @@ class Tween{
 
     func update(dt : Double){
         timePassed += dt
-        val progress = timePassed / animationTime
-        val valueRange = endValue-startValue
+        var progress = timePassed / animationTime
+        var valueRange = endValue-startValue
         if (progress >= 1.0) {return}
         switch animationMode{
             case AnimationMode.LINEAR:
@@ -51,12 +52,12 @@ class Tween{
                 else
                     currentValue = startValue + valueRange * sin(progress * Double.PI)
             case AnimationMode.SHAKE_ASYMMETRIC:
-                val sawtooth = (progress * shakeCycleCount) % 1.0 * shakeCycleCount // 0 to 1, rising linearly and falling sharply
-                val triangle = valueRange * 2.0 * (sawtooth - 2.0 * max(0.5-progressSawtooth, 0)) // scaled to value range, rising and falling linearly 
+                var sawtooth = (progress * shakeCycleCount) % 1.0 * shakeCycleCount // 0 to 1, rising linearly and falling sharply
+                var triangle = valueRange * 2.0 * (sawtooth - 2.0 * max(0.5-progressSawtooth, 0)) // scaled to value range, rising and falling linearly 
                 currentValue = endValue - triangle * (1.0-progress) // same as symmetric but decaying with progress
             case AnimationMode.SHAKE_SYMMETRIC:
-                val sawtooth = (progress * shakeCycleCount) % 1.0 * shakeCycleCount 
-                val triangle = valueRange * 2.0 * (sawtooth - 2.0 * max(0.5-progressSawtooth, 0.0))
+                var sawtooth = (progress * shakeCycleCount) % 1.0 * shakeCycleCount 
+                var triangle = valueRange * 2.0 * (sawtooth - 2.0 * max(0.5-progressSawtooth, 0.0))
                 currentValue = endValue - triangle * (1.0-progress) * 2.0 // only difference: this is times 2
             default:
                 pass
