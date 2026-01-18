@@ -217,12 +217,12 @@ class GameLoop : Node, ObservableObject{
 
         if bubblesHitPerfectly.count > 0 { 
             for bubble in bubblesHitPerfectly{
-                popBubble(bubble)
+                popBubble(bubble: bubble)
             }
         }
         else if bubblesInHitRange.count > 0 {
             bubblesInHitRange = bubblesInHitRange.sorted {$0.hitAccuracy(popHeight : BUBBLE_POP_HEIGHT) > $1.hitAccuracy(popHeight : BUBBLE_POP_HEIGHT)}
-            popBubble(bubblesInHitRange[0])
+            popBubble(bubble: bubblesInHitRange[0])
         }
         else
         {
