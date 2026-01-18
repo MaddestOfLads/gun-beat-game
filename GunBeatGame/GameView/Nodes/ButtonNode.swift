@@ -37,8 +37,8 @@ class ButtonNode: VfxCapableNode{
                     .cornerRadius(self.cornerRadius)
             }
             .position(
-                x: (position.x + vfx_position_offset.x) * scale.width,
-                y: (position.y + vfx_position_offset.y) * scale.height
+                x: (position.x + vfx_position_offset.x) * size.width,
+                y: (position.y + vfx_position_offset.y) * size.height
             )
         )
     }
