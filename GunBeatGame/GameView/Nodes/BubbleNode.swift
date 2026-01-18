@@ -24,7 +24,7 @@ class BubbleNode : VfxCapableNode{
         self.position = SPAWN_POS
         self.speed = pb.speed
         self.hitMargin = pb.hitMargin
-        super.init(position: SPAWN_POS, color: pb.color, scale : CGSize(width: pb.width, height: pb.height))
+        super.init(position: SPAWN_POS, scale : CGSize(width: pb.width, height: pb.height), color: pb.color)
     }
 
     override func physicsProcess(dt : Double, db : Double)
@@ -49,8 +49,8 @@ class BubbleNode : VfxCapableNode{
     {
         return AnyView(Rectangle()
             .fill(color.mix(with: vfx_color, by: vfx_color_blend_amount))
-            .frame(width: scale.width * vfx_scale_multiplier.width * size.width, height: scale.height * vfx_dimensions_multiplier.height * canvasSize.height)
-            .position(x: (position.x + vfx_position_offset.x) * size.width, y: (position.y + vfx_position_offset.y) * canvasSize.height)
+            .frame(width: scale.width * vfx_scale_multiplier.width * size.width, height: scale.height * vfx_scale_multiplier.height * size.height)
+            .position(x: (position.x + vfx_position_offset.x) * size.width, y: (position.y + vfx_position_offset.y) * size.height)
             .opacity(opacity)
         )
     }
@@ -78,6 +78,6 @@ class BubbleNode : VfxCapableNode{
     func getHit()
     {
         isPopped = true
-        pulseColor(time: 0.5, color: Color.white)
+        pulseColor(pulseTime: 0.5, color: Color.white)
     }
 }

@@ -276,7 +276,7 @@ class GameLoop : Node, ObservableObject{
                 bubble.slowing_down = true
             }
             if let vfxNode = child as? VfxCapableNode {
-                vfxNode.pulseColor(pulsTime: 0.5, color: Color.red, fadeIn: false)
+                vfxNode.pulseColor(pulseTime: 0.5, color: Color.red, fadeIn: false)
             }
         }
     }
