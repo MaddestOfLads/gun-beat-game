@@ -20,7 +20,7 @@ class VfxCapableNode : Node {
         self.color = color
     }
 
-    func decayVfx(dt : float) {
+    func updateVfx(dt : float) { // Should be ran once in physicsProcess; updates all VFX
         vfx_color_blend_amount = 
             min(1.0, 
             max(0.0, 

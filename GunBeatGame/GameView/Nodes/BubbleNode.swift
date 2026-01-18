@@ -41,7 +41,7 @@ class BubbleNode : VfxCapableNode{
             opacity -= db / POP_ANIMATION_TIME
             position.x += db * popped_x_speed
         }
-        decayVfx(Float(dt))
+        updateVfx(Float(dt))
     }
 
     override func draw(in canvasSize: CGSize) -> AnyView

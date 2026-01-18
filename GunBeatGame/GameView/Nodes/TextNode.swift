@@ -22,6 +22,6 @@ class TextNode: VfxCapableNode{
         )
     }
     override func physicsProcess(dt: Double, db: Double) {
-        decayVfx(Float(dt))
+        updateVfx(Float(dt))
     }
 }
