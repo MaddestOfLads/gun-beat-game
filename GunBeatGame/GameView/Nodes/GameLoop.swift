@@ -39,7 +39,7 @@ class GameLoop : Node, ObservableObject{
     lazy var gunButton: ButtonNode = {
         let button = ButtonNode(
             position: CGPoint(x:0.7, y:0.8),
-            scale: CGSize(width:0.2, height:0.15),
+            scale: CGSize(width:0.3, height:0.15),
             color: Color.green,
             text: "Gun",
             onPressed: { self.fireGun() }
@@ -49,8 +49,8 @@ class GameLoop : Node, ObservableObject{
     
     lazy var pauseButton: ButtonNode = {
         let button = ButtonNode(
-            position: CGPoint(x:0.95, y:0.05),
-            scale: CGSize(width:0.1, height:0.1),
+            position: CGPoint(x:0.85, y:0.05),
+            scale: CGSize(width:0.3, height:0.1),
             color: Color.brown,
             text: "Pause",
             onPressed: { self.togglePause() }
@@ -60,8 +60,8 @@ class GameLoop : Node, ObservableObject{
     
     lazy var restartButton: ButtonNode = {
         let button = ButtonNode(
-            position: CGPoint(x:0.95, y:0.15),
-            scale: CGSize(width:0.1, height:0.1),
+            position: CGPoint(x:0.85, y:0.15),
+            scale: CGSize(width:0.3, height:0.1),
             color: Color.brown,
             text: "Restart",
             onPressed: { self.startOrRestartSong() }
