@@ -256,18 +256,18 @@ class GameLoop : Node, ObservableObject{
         if (changeAmount >= 0) {
             current_score += changeAmount
             missed_score -= changeAmount * MISSED_SCORE_HEAL_AMOUNT
-            scoreCounter.pulseColor(time: 0.25, color: Color.green)
+            scoreCounter.pulseColor(time: 0.25, color: Color.green, fadeIn: false)
         }
         else
         {
             missed_score -= changeAmount
-            scoreCounter.pulseColor(time: 0.25, color: Color.red)
+            scoreCounter.pulseColor(time: 0.25, color: Color.red, fadeIn: false)
             if (missed_score > missedScoreThresholdForFailure)
             {
                 startLevelLossAnimation()
             }
         }
-        scoreCounter.text = Strign(current_score)
+        scoreCounter.text = String(current_score)
     }
 
     func startLevelLossAnimation() {
@@ -276,7 +276,7 @@ class GameLoop : Node, ObservableObject{
                 bubble.slowing_down = true
             }
             if let vfxNode = child as? VfxCapableNode {
-                vfxNode.pulseColor(time: 0.5, color: Color.red)
+                vfxNode.pulseColor(time: 0.5, color: Color.red, fadeIn: false)
             }
         }
     }

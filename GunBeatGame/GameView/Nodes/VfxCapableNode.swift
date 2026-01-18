@@ -1,5 +1,6 @@
 // Nodes that can be influenced by VFX.
 // They have a position, size, and color, as well as variables which 
+import SwiftUI //so that Color can work
 
 class VfxCapableNode : Node {
     var color: Color
@@ -11,7 +12,7 @@ class VfxCapableNode : Node {
     var vfx_scale_multiplier : CGSize = CGSize(width: 1.0, height: 1.0)
     
     var position: CGPoint //relative to screen size
-    var vfx_position_offset : position : CGPoint = CGPoint(width: 1.0, height: 1.0)
+    var vfx_position_offset : CGPoint = CGPoint(width: 1.0, height: 1.0)
 
 
     init(position: CGPoint, scale: CGSize, color: Color) {
@@ -27,7 +28,7 @@ class VfxCapableNode : Node {
             vfx_color_blend_amount + (delta_color_blend * dt)))
     }
 
-    func pulseColor((pulse_time: Double, color: Color, fadeIn : Bool = false)){
+    func pulseColor(pulse_time: Double, color: Color, fadeIn : Bool){
         vfx_color = color
         if(fadeIn){
             vfx_color_blend_amount = 0.0
