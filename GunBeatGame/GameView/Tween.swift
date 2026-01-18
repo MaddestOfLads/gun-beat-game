@@ -1,13 +1,13 @@
-
+import Foundation
 // Class for interpolating (animating) a Double over time, meant to simplify animating a property over time.
 // I made it because   Swift is     Pissing me off and I need it to work like it does in Godot.
 class Tween{
     enum AnimationMode {
-        case LINEAR, // From A to B in a straight line
-        case EASE_IN, // Smooth beginning (sinusoid)
-        case EASE_OUT, // Smooth ending (sinusoid)
-        case EASE_IN_OUT, // Smooth beginning and ending
-        case SHAKE_ASYMMETRIC, // Shaking between start and end that collapses at end.
+        case LINEAR // From A to B in a straight line
+        case EASE_IN // Smooth beginning (sinusoid)
+        case EASE_OUT // Smooth ending (sinusoid)
+        case EASE_IN_OUT // Smooth beginning and ending
+        case SHAKE_ASYMMETRIC // Shaking between start and end that collapses at end.
         case SHAKE_SYMMETRIC // Shaking between (start-end) and end that collapses at end. WARNING: MAY RETURN VALUES OUTSIDE RANGE!
     }
     var animationMode : Tween.AnimationMode
