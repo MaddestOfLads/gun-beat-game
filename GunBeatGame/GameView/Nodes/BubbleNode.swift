@@ -21,7 +21,7 @@ class BubbleNode : VfxCapableNode{
     init(pb: PackedBubble) // Constructor
     //Creates the bubble node from the packedBubble (which only stores bubble data)
     {
-        super.init(position: SPAWN_POS, color: pb.color, size : CGSize(width: pb.width, height: pb.height))
+        super.init(position: SPAWN_POS, color: pb.color, scale : CGSize(width: pb.width, height: pb.height))
         self.position = SPAWN_POS
         self.speed = pb.speed
         self.hitMargin = pb.hitMargin
@@ -31,7 +31,7 @@ class BubbleNode : VfxCapableNode{
     //Called by parent node every frame
     //Makes the bubble move
     {
-        if(slowing_down) speed -= speed * dt * SLOW_DOWN_TIME
+        if(slowing_down) {speed -= speed * dt * SLOW_DOWN_TIME}
         if(!isPopped) {
             position.y += db * speed
         }
@@ -41,16 +41,16 @@ class BubbleNode : VfxCapableNode{
             opacity -= db / POP_ANIMATION_TIME
             position.x += db * popped_x_speed
         }
-        updateVfx(Float(dt))
+        updateVfx(dt:dt)
     }
 
-    override func draw(in canvasSize: CGSize) -> AnyView
+    override func draw(in size: CGSize) -> AnyView
     //Renders the bubble; called by parent node
     {
         return AnyView(Rectangle()
             .fill(color.mix(with: vfx_color, by: vfx_color_blend_amount))
-            .frame(width: size.width * vfx_dimensions_multiplier.width * canvasSize.width, height: size.height * vfx_dimensions_multiplier.height * canvasSize.height)
-            .position(x: (position.x + vfx_position_offset.x) * canvasSize.width, y: (position.y + vfx_position_offset.y) * canvasSize.height)
+            .frame(width: scale.width * vfx_scale_multiplier.width * size.width, height: scale.height * vfx_dimensions_multiplier.height * canvasSize.height)
+            .position(x: (position.x + vfx_position_offset.x) * size.width, y: (position.y + vfx_position_offset.y) * canvasSize.height)
             .opacity(opacity)
         )
     }
@@ -62,12 +62,12 @@ class BubbleNode : VfxCapableNode{
     //If bubble is nowhere near barrel, returns 0
     {
         if(
-            popHeight < position.y + (size.height/2)
-            && popHeight > position.y - (size.height/2)
+            popHeight < position.y + (scale.height/2)
+            && popHeight > position.y - (scale.height/2)
         ) {return 1.0}
         else if(
-            popHeight < position.y + (size.height/2) + hitMargin
-            && popHeight > position.y - (size.height/2) - hitMargin
+            popHeight < position.y + (scale.height/2) + hitMargin
+            && popHeight > position.y - (scale.height/2) - hitMargin
         )
         {
             return (hitMargin - abs(popHeight + (size.height/2) - position.y))/hitMargin

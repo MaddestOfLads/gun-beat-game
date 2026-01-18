@@ -22,8 +22,8 @@ class ButtonNode: VfxCapableNode, ObservableObject{
         }
     }
 
-    init(position: CGPoint, dimensions: CGSize, color: Color, text: String, onPressed: (() -> Void)? = nil) {
-        super.init(position: position, dimensions: dimension, color: color)
+    init(position: CGPoint, scale: CGSize, color: Color, text: String, onPressed: (() -> Void)? = nil) {
+        super.init(position: position, scale: dimension, color: color)
         self.text = text
         self.onPressed = onPressed
     }
@@ -34,19 +34,19 @@ class ButtonNode: VfxCapableNode, ObservableObject{
                 self.onPressed?()
             }) {
                 Text(text)
-                    .frame(width: size.width * dimensions.width * vfx_dimensions_multiplier.width,
-                        height: size.height * dimensions.height * vfx_dimensions_multiplier.height)
+                    .frame(width: size.width * scale.width * vfx_scale_multiplier.width,
+                        height: size.height * scale.height * vfx_scale_multiplier.height)
                     .background(self.color.mix(with: vfx_color, by: vfx_color_blend_amount))
                     .foregroundColor(Color.black)
                     .cornerRadius(self.cornerRadius)
             }
             .position(
-                x: (position.x + vfx_position_offset.x) * size.width,
-                y: (position.y + vfx_position_offset.y) * size.height
+                x: (position.x + vfx_position_offset.x) * scale.width,
+                y: (position.y + vfx_position_offset.y) * scale.height
             )
         )
     }
     override func physicsProcess(dt: Double, db: Double) {
-        updateVfx(Float(dt))
+        updateVfx(dt:dt)
     }
 }

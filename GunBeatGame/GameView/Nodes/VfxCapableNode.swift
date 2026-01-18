@@ -7,16 +7,16 @@ class VfxCapableNode : Node {
     var vfx_color_blend_amount : Double // 0 to 1
     var delta_color_blend: Double = -1.0 // How fast per second the currently applied effect(s) will decay
 
-    var dimensions: CGSize //relative to screen size
-    var vfx_dimensions_multiplier : CGSize = CGSize(width: 1.0, height: 1.0)
+    var scale: CGSize //relative to screen size
+    var vfx_scale_multiplier : CGSize = CGSize(width: 1.0, height: 1.0)
     
     var position: CGPoint //relative to screen size
     var vfx_position_offset : position : CGPoint = CGPoint(width: 1.0, height: 1.0)
 
 
-    init(position: CGPoint, dimensions: CGSize, color: Color) {
+    init(position: CGPoint, scale: CGSize, color: Color) {
         self.position = position
-        self.dimensions = dimensions
+        self.scale = scale
         self.color = color
     }
 
