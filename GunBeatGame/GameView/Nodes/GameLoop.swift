@@ -181,7 +181,7 @@ class GameLoop : Node, ObservableObject{
 
     override func draw(in size: CGSize) -> AnyView{
         return AnyView(
-            Color.orange
+            Color.black
         )
     }
 
