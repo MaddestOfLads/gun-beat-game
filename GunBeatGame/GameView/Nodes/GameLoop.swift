@@ -71,8 +71,8 @@ class GameLoop : Node, ObservableObject{
 
     lazy var scoreCounter : TextNode = {
         let counter = TextNode(
-            position: CGPoint(x: 0.7, y: 0.6),
-            scale: CGSize(width: 0.2, height: 0.05),
+            position: CGPoint(x: 0.7, y: 0.55),
+            scale: CGSize(width: 0.2, height: 0.1),
             color: Color.black,
             text: "0"
         )
