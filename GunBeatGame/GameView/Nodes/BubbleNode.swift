@@ -21,7 +21,6 @@ class BubbleNode : VfxCapableNode{
     init(pb: PackedBubble) // Constructor
     //Creates the bubble node from the packedBubble (which only stores bubble data)
     {
-        self.position = SPAWN_POS
         self.speed = pb.speed
         self.hitMargin = pb.hitMargin
         super.init(position: SPAWN_POS, scale : CGSize(width: pb.width, height: pb.height), color: pb.color)
