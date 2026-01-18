@@ -86,12 +86,18 @@ class GameLoop : Node, ObservableObject{
         spawnLevelUI()
         let dt = 1.0 / FPS
         let db = dt * (self.bpm / 60.0)
+        loadingTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false){_ in
+            startPhysicsProcess()
+        }
+    }
+
+    func startPhysicsProcess(){
+        startOrRestartSong()
         frameTimer = Timer.scheduledTimer(withTimeInterval: dt, repeats: true) { _ in
             if(!self.isPaused) {
                 self.physicsProcessSelfThenChildren(dt: dt, db: db)
             }
         }
-        startOrRestartSong()
     }
 
     func spawnLevelUI()
