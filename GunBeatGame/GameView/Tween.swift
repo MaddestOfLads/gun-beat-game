@@ -49,11 +49,11 @@ class Tween{
             case AnimationMode.EASE_IN_OUT:
                 currentValue = endValue - valueRange * sin((0.5-progress) * Double.pi)
             case AnimationMode.SHAKE_ASYMMETRIC:
-                var sawtooth = (progress * shakeCycleCount) % 1.0 * shakeCycleCount // 0 to 1, rising linearly and falling sharply
+                var sawtooth = (progress * shakeCycleCount).truncatingRemainder(1.0) * shakeCycleCount // 0 to 1, rising linearly and falling sharply
                 var triangle = valueRange * 2.0 * (sawtooth - 2.0 * max(0.5-progressSawtooth, 0)) // scaled to value range, rising and falling linearly 
                 currentValue = endValue - triangle * (1.0-progress) // same as symmetric but decaying with progress
             case AnimationMode.SHAKE_SYMMETRIC:
-                var sawtooth = (progress * shakeCycleCount) % 1.0 * shakeCycleCount 
+                var sawtooth = (progress * shakeCycleCount).truncatingRemainder(1.0) * shakeCycleCount
                 var triangle = valueRange * 2.0 * (sawtooth - 2.0 * max(0.5-progressSawtooth, 0.0))
                 currentValue = endValue - triangle * (1.0-progress) * 2.0 // only difference: this is times 2
             default:
