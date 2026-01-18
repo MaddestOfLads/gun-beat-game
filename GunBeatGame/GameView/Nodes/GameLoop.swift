@@ -226,14 +226,14 @@ class GameLoop : Node, ObservableObject{
         }
         else
         {
-            changeScore(-MAX_SCORE_PER_BUBBLE)
+            changeScore(changeAmount: -Float(MAX_SCORE_PER_BUBBLE))
         }
     }
 
     func popBubble(bubble : BubbleNode){
-        val hit_accuracy : Float = bubble.hitAccuracy(popHeight: bubblePopHeight)
-        val added_score : Float = ceil(hit_accuracy * Float(MAX_SCORE_PER_BUBBLE))
-        changeScore(added_score)
+        var hit_accuracy : Float = bubble.hitAccuracy(popHeight: bubblePopHeight)
+        var added_score : Float = ceil(hit_accuracy * Float(MAX_SCORE_PER_BUBBLE))
+        changeScore(changeAmount: added_score)
         bubble.getHit()
         if(areVictoryCriteriaFulfilled()) {
             startLevelWinAnimation()
@@ -253,15 +253,15 @@ class GameLoop : Node, ObservableObject{
         }
     }
 
-    func changeScore(change_amount : Float) {
-        if (change_amount >= 0) {
-            current_score += change_amount
-            missed_score -= change_amount * MISSED_SCORE_HEAL_AMOUNT
+    func changeScore(changeAmount : Float) {
+        if (changeAmount >= 0) {
+            current_score += changeAmount
+            missed_score -= changeAmount * MISSED_SCORE_HEAL_AMOUNT
             scoreCounter.pulseColor(time: 0.25, color: Color.green)
         }
         else
         {
-            missed_score -= change_amount
+            missed_score -= changeAmount
             scoreCounter.pulseColor(time: 0.25, color: Color.red)
             if (missed_score > missedScoreThresholdForFailure)
             {
