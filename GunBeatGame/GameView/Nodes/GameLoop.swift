@@ -9,7 +9,7 @@ class GameLoop : Node, ObservableObject{
     @Published var frame : Int = 0 //Frame number; changing this triggers view updates
     let FPS : Double = 60.0
     let MAX_SCORE_PER_BUBBLE : Int = 100
-    let BUBBLE_POP_HEIGHT : Float = 0.8
+    var bubblePopHeight : Floaat = 0.8
     var bpm : Double = 120.0 //Varies from song to song
     var beat: Double = 0.0
         //Time measured in beats. Resets on song restart.
@@ -201,7 +201,7 @@ class GameLoop : Node, ObservableObject{
         
         for child in children{
             if let bubble = child as? BubbleNode {
-                var accuracy : Double = bubble.hitAccuracy(popHeight: CGFloat(BUBBLE_POP_HEIGHT))
+                var accuracy : Double = bubble.hitAccuracy(popHeight: CGFloat(bubblePopHeight))
                 if (accuracy > 0.0) {
                     bubblesInHitRange.append(bubble)
                 }
@@ -210,7 +210,7 @@ class GameLoop : Node, ObservableObject{
 
         var bubblesHitPerfectly : [BubbleNode] = []
         for bubble in bubblesInHitRange{
-            if bubble.hitAccuracy(popHeight: CGFloat(BUBBLE_POP_HEIGHT)) == 1.0 {
+            if bubble.hitAccuracy(popHeight: bubblePopHeight) == 1.0 {
                 bubblesHitPerfectly.append(bubble)
             }
         }
@@ -221,7 +221,7 @@ class GameLoop : Node, ObservableObject{
             }
         }
         else if bubblesInHitRange.count > 0 {
-            bubblesInHitRange = bubblesInHitRange.sorted {$0.hitAccuracy(popHeight : BUBBLE_POP_HEIGHT) > $1.hitAccuracy(popHeight : BUBBLE_POP_HEIGHT)}
+            bubblesInHitRange = bubblesInHitRange.sorted {$0.hitAccuracy(popHeight : bubblePopHeight) > $1.hitAccuracy(popHeight : BUBBLE_POP_HEIGHT)}
             popBubble(bubble: bubblesInHitRange[0])
         }
         else
@@ -231,7 +231,7 @@ class GameLoop : Node, ObservableObject{
     }
 
     func popBubble(bubble : BubbleNode){
-        val hit_accuracy : Float = bubble.hitAccuracy(popHeight: BUBBLE_POP_HEIGHT)
+        val hit_accuracy : Float = bubble.hitAccuracy(popHeight: bubblePopHeight)
         val added_score : Float = ceil(hit_accuracy * Float(MAX_SCORE_PER_BUBBLE))
         changeScore(added_score)
         bubble.getHit()
