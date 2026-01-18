@@ -23,9 +23,9 @@ class ButtonNode: VfxCapableNode, ObservableObject{
     }
 
     init(position: CGPoint, scale: CGSize, color: Color, text: String, onPressed: (() -> Void)? = nil) {
-        super.init(position: position, scale: dimension, color: color)
         self.text = text
         self.onPressed = onPressed
+        super.init(position: position, scale: dimension, color: color)
     }
 
     override func draw(in size: CGSize) -> AnyView { //Overrides Node.draw()

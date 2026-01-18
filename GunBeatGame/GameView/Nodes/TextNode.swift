@@ -7,8 +7,8 @@ class TextNode: VfxCapableNode{
     var text: String
 
     init(position: CGPoint, scale: CGSize, color: Color, text: String = "") {
-        super.init(position: position, scale: scale, color: color)
         self.text = text
+        super.init(position: position, scale: scale, color: color)
     }
 
     override func draw(in size: CGSize) -> AnyView { //Overrides Node.draw()

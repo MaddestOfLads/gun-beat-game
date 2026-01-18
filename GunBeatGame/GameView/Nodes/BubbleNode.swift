@@ -21,10 +21,10 @@ class BubbleNode : VfxCapableNode{
     init(pb: PackedBubble) // Constructor
     //Creates the bubble node from the packedBubble (which only stores bubble data)
     {
-        super.init(position: SPAWN_POS, color: pb.color, scale : CGSize(width: pb.width, height: pb.height))
         self.position = SPAWN_POS
         self.speed = pb.speed
         self.hitMargin = pb.hitMargin
+        super.init(position: SPAWN_POS, color: pb.color, scale : CGSize(width: pb.width, height: pb.height))
     }
 
     override func physicsProcess(dt : Double, db : Double)
