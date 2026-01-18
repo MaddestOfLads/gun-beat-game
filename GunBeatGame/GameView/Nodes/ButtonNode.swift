@@ -16,6 +16,7 @@ class ButtonNode: VfxCapableNode{
 
     var onPressed: (() -> Void)?
     let cornerRadius: CGFloat = 8.0;
+    var text : String
 
     init(position: CGPoint, scale: CGSize, color: Color, text: String, onPressed: (() -> Void)? = nil) {
         self.text = text
