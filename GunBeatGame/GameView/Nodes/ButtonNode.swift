@@ -46,4 +46,7 @@ class ButtonNode: VfxCapableNode, ObservableObject{
             )
         )
     }
+    override func physicsProcess(dt: Double, db: Double) {
+        decayVfx(Float(dt))
+    }
 }

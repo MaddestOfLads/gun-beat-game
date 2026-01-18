@@ -21,4 +21,7 @@ class TextNode: VfxCapableNode{
                 y: (position.y + vfx_position_offset.y) * size.height)
         )
     }
+    override func physicsProcess(dt: Double, db: Double) {
+        decayVfx(Float(dt))
+    }
 }

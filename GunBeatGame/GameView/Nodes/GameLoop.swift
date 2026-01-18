@@ -28,6 +28,10 @@ class GameLoop : Node, ObservableObject{
     let MISSED_SCORE_HEAL_AMOUNT : Float = 0.2 // Restore this much missed score for every 1pt of gained score
     var missedScoreThresholdForFailure : Float = 200.0
 
+    var level_lost : Bool = false
+    let LEVEL_LOSS_TIME : Double = 0.5
+    var level_loss_time_left : Double = 0.5
+
     lazy var gunButton: ButtonNode = {
         let button = ButtonNode(
             position: CGPoint(x:0.7, y:0.8),
@@ -105,7 +109,8 @@ class GameLoop : Node, ObservableObject{
     }
 
     func startOrRestartSong() {
-        
+        level_lost = false
+
         for child in children{
             if let bubble = child as? BubbleNode {
                 removeChild(bubble)
@@ -123,10 +128,10 @@ class GameLoop : Node, ObservableObject{
         song_player.play()
     }
 
+
     func loadLevelData(levelData : LevelData)
     {
         /**
-         
         let parts = levelData.musicAssetName.split(separator: "/").map(String.init)
         let last = parts.last ?? levelData.musicAssetName
         let subdir = parts.count > 1 ? parts.dropLast().joined(separator: "/") : nil
@@ -176,6 +181,7 @@ class GameLoop : Node, ObservableObject{
         frame += 1
         beat += db
         spawnBubbles()
+        progressLevelLossAnimationIfLost(dt)
     }
     
     //Spawns next bubble if its spawn time has come
@@ -251,22 +257,41 @@ class GameLoop : Node, ObservableObject{
     func changeScore(change_amount : Float) {
         if (change_amount >= 0) {
             current_score += change_amount
-            missed_score -= change_amount * 
+            missed_score -= change_amount * MISSED_SCORE_HEAL_AMOUNT
+            scoreCounter.pulseColor(time: 0.25, color: Color.green)
         }
         else
         {
             missed_score -= change_amount
+            scoreCounter.pulseColor(time: 0.25, color: Color.red)
             if (missed_score > missedScoreThresholdForFailure)
             {
-                loseLevel()
+                startLevelLossAnimation()
             }
         }
         scoreCounter.text = current_score
     }
 
-    func loseLevel() {
-        // TODO
+    func startLevelLossAnimation() {
+        for child in children {
+            if let bubble = child as? BubbleNode {
+                bubble.slowing_down = true
+            }
+            if let vfxNode = child as? VfxCapableNode {
+                vfxNode.pulseColor(time: 0.5, color: Color.red)
+            }
+        }
     }
+    
+    func progressLevelLossAnimationIfLost(dt : Double){
+        if(level_lost){
+            level_loss_time_left -= dt
+            if (level_loss_time_left <= 0.0){
+                startOrRestartSong()
+            }
+        }
+    }
+
 
     /**
         TODO: beating a level
@@ -285,6 +310,7 @@ class GameLoop : Node, ObservableObject{
             - on bubble pop
             - on firing a missed shot
             - on letting a bubble pass
+            - on level win: some kind of ding
             - on level loss: spawn white noise idk
     */
 }

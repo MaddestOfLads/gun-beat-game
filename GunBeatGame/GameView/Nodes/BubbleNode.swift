@@ -11,6 +11,9 @@ class BubbleNode : VfxCapableNode{
     var opacity : Double = 1.0
     var popped_x_speed : Double = -0.4
 
+    var slowing_down : Bool = false
+    let SLOW_DOWN_TIME : Double = 0.5
+
     var speed : Double //Measured in screens per beat
 
     var hitMargin : CGFloat //Margin used to accept imperfect hits with a lesser score
@@ -28,6 +31,7 @@ class BubbleNode : VfxCapableNode{
     //Called by parent node every frame
     //Makes the bubble move
     {
+        if(slowing_down) speed -= speed * dt * SLOW_DOWN_TIME
         if(!isPopped) {
             position.y += db * speed
         }
@@ -37,6 +41,7 @@ class BubbleNode : VfxCapableNode{
             opacity -= db / POP_ANIMATION_TIME
             position.x += db * popped_x_speed
         }
+        decayVfx(Float(dt))
     }
 
     override func draw(in canvasSize: CGSize) -> AnyView
@@ -73,6 +78,6 @@ class BubbleNode : VfxCapableNode{
     func getHit()
     {
         isPopped = true
-        color = Color.red
+        pulseColor(time: 0.5, color: Color.white)
     }
 }
