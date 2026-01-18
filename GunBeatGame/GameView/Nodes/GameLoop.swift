@@ -74,7 +74,7 @@ class GameLoop : Node, ObservableObject{
             position: CGPoint(x: 0.7, y: 0.6),
             scale: CGSize(width: 0.2, height: 0.05),
             color: Color.black,
-            text: ""
+            text: "0"
         )
         return counter
     }()

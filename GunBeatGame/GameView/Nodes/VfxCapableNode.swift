@@ -5,7 +5,7 @@ import SwiftUI //so that Color can work
 class VfxCapableNode : Node {
     var color: Color
     var vfx_color: Color = Color.black
-    var vfx_color_blend_amount : Double // 0 to 1
+    var vfx_color_blend_amount : Double = 0.0 // 0 to 1
     var delta_color_blend: Double = -1.0 // How fast per second the currently applied effect(s) will decay
 
     var scale: CGSize //relative to screen size
