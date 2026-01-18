@@ -207,7 +207,8 @@ class GameLoop : Node, ObservableObject{
                 }
             }
         }
-        bubblesHitPerfectly : [Bubblenode] = []
+
+        var bubblesHitPerfectly : [Bubblenode] = []
         for bubble in bubblesInHitRange{
             if bubble.hitAccuracy(popHeight: CGFloat(BUBBLE_POP_HEIGHT)) == 1.0 {
                 bubblesHitPerfectly.append(bubble)
