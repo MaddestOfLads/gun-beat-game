@@ -27,11 +27,13 @@ class Tween{
     ){
         self.animationMode = animationMode
         self.animationTime = animationTime
-        self.timePassed = 0.0
         self.startValue = startValue
         self.endValue = endValue
         self.shakeCycleCount = shakeCycleCount
-        self.currentValue = self.startValue
+
+        // tween should not trigger instantly, so end values are assigned
+        self.timePassed = animationTime
+        self.currentValue = self.endValue
     }
 
     func update(dt : Double){
@@ -67,7 +69,14 @@ class Tween{
                 break
         }
     }
+
     func getValue() -> Double {
         return currentValue
+    }
+
+    // Actually trigger tween effect 
+    func startTween() {
+        self.timePassed = 0.0
+        self.currentValue = self.startValue
     }
 }
