@@ -42,6 +42,14 @@ class GameLoop : Node, ObservableObject{
     var bubbleColor : Color = Color.orange
     var bubbleFlashColor : Color = Color.white
 
+    lazy var gunMarker : GunMarkerNode = {
+        let marker = GunMarkerNode(
+            position: CGPoint(x: 0.3, y: bubblePopHeight),
+            scale: CGSize(width: 0.4, height: 0.01),
+            color: self.uiColor
+        )
+    }
+
     lazy var gunButton: GunButtonNode = {
         let button = GunButtonNode(
             position: CGPoint(x:0.7, y:0.8),
@@ -110,6 +118,7 @@ class GameLoop : Node, ObservableObject{
 
     func spawnLevelUI()
     {
+        addChild(gunMarkerNode)
         addChild(gunButton)
         addChild(pauseButton)
         addChild(restartButton)
