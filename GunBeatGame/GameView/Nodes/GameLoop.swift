@@ -36,11 +36,16 @@ class GameLoop : Node, ObservableObject{
     let LEVEL_WIN_TIME : Double = 2.0
     var level_win_time_left : Double = 2.0
     
+    var backgroundColor : Color = Color.black
+    var uiColor : Color = Color.orange
+    var bubbleColor : Color = Color.orange
+    var bubbleFlashColor : Color = Color.white
+
     lazy var gunButton: ButtonNode = {
         let button = ButtonNode(
             position: CGPoint(x:0.7, y:0.8),
             scale: CGSize(width:0.3, height:0.15),
-            color: Color.green,
+            color: self.uiColor,
             text: "Gun",
             onPressed: { self.fireGun() }
         )
@@ -51,7 +56,7 @@ class GameLoop : Node, ObservableObject{
         let button = ButtonNode(
             position: CGPoint(x:0.85, y:0.05),
             scale: CGSize(width:0.3, height:0.1),
-            color: Color.brown,
+            color: self.uiColor,
             text: "Pause",
             onPressed: { self.togglePause() }
         )
@@ -62,7 +67,7 @@ class GameLoop : Node, ObservableObject{
         let button = ButtonNode(
             position: CGPoint(x:0.85, y:0.15),
             scale: CGSize(width:0.3, height:0.1),
-            color: Color.brown,
+            color: self.uiColor,
             text: "Restart",
             onPressed: { self.startOrRestartSong() }
         )
@@ -73,7 +78,7 @@ class GameLoop : Node, ObservableObject{
         let counter = TextNode(
             position: CGPoint(x: 0.7, y: 0.55),
             scale: CGSize(width: 0.2, height: 0.1),
-            color: Color.black,
+            color: self.bubbleColor,
             text: "0"
         )
         return counter
@@ -159,17 +164,19 @@ class GameLoop : Node, ObservableObject{
 		// Load bubbles
         for bubble in levelData.bubbles {
 
+            /**
             let r = Double(bubble.color.r) / 255.0
             let g = Double(bubble.color.g) / 255.0
             let b = Double(bubble.color.b) / 255.0
             let c = Color(red: r, green: g, blue: b)
+            */
 
             self.packedBubbles.append(
                 PackedBubble(
                     targetBeat: Double(bubble.targetBeat),
                     speed: Double(bubble.speed),
                     height: Double(bubble.size),
-                    color: c
+                    color: self.bubbleColor // Overrides individual bubble color
                 )
             )
         }
@@ -181,7 +188,7 @@ class GameLoop : Node, ObservableObject{
 
     override func draw(in size: CGSize) -> AnyView{
         return AnyView(
-            Color.black
+            self.backgroundColor
         )
     }
 
@@ -289,7 +296,7 @@ class GameLoop : Node, ObservableObject{
                 bubble.slowing_down = true
             }
             if let vfxNode = child as? VfxCapableNode {
-                vfxNode.pulseColor(pulseTime: 0.5, color: Color.red, fadeIn: false)
+                vfxNode.pulseColor(pulseTime: 0.5, color: Color.red, fadeIn: true)
             }
         }
     }
@@ -347,4 +354,11 @@ class GameLoop : Node, ObservableObject{
             - on level win: some kind of ding
             - on level loss: spawn white noise idk
     */
+
+
+    /**
+        ISSUES TO ADDRESS:
+            - score counter not showing up
+    */
+
 }
