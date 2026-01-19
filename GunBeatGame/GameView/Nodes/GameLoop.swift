@@ -27,7 +27,7 @@ class GameLoop : Node, ObservableObject{
     var current_score : Float = 0
     var missed_score : Float = 0
     let MISSED_SCORE_HEAL_AMOUNT : Float = 0.2 // Restore this much missed score for every 1pt of gained score
-    var missedScoreThresholdForFailure : Float = 200.0
+    var missedScoreThresholdForFailure : Float = 250.0 // miss 3 bubbles/shots in a row = fail
 
     var level_loss_animation_playing : Bool = false
     let LEVEL_LOSS_TIME : Double = 0.5
@@ -137,6 +137,8 @@ class GameLoop : Node, ObservableObject{
         
         beat = 0.0
         indexOfNextBubbleToSpawn = 0
+        current_score = 0.0
+        missed_score = 0.0
 
         print("Playing song")
         if song_player.isPlaying {
@@ -155,10 +157,10 @@ class GameLoop : Node, ObservableObject{
                 song_player = try AVAudioPlayer(contentsOf: url)
                 song_player.prepareToPlay()
             } catch {
-                print("❌ AVAudioPlayer init failed:", error)
+                print("AVAudioPlayer init failed:", error)
             }
         } else {
-            print("❌ Could not find audio file:", levelData.musicAssetName)
+            print("Could not find audio file:", levelData.musicAssetName)
         }
         
         self.bpm = levelData.songBPM
@@ -216,6 +218,16 @@ class GameLoop : Node, ObservableObject{
         }
     }
 
+    func checkForMissedBubbles() {
+        for child in children{
+            if let bubble = child as? BubbleNode {
+                if (bubble.position.y >= bubbleMissHeight){
+
+                }
+            }
+        }
+    }
+
     // if multiple bubbles hit: accept only the ones that were hit perfectly
         // if none were hit perfectly: accept the one with the highest score
     // 
@@ -261,6 +273,11 @@ class GameLoop : Node, ObservableObject{
         if(areVictoryCriteriaFulfilled()) {
             startLevelWinAnimation()
         }
+    }
+
+    func missBubble(bubble : BubbleNode){
+        removeChild(bubble)
+        changeScore(-MAX_SCORE_PER_BUBBLE)
     }
 
     func togglePause() {
