@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct gun_beat_gameApp: App {
@@ -13,5 +14,6 @@ struct gun_beat_gameApp: App {
         WindowGroup {
             GameView(levelData: loadLevelData(fileName: "1.json")!)
         }
+        .modelContainer(for: LevelResultRecord.self)
     }
 }
