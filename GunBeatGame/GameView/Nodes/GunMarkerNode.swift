@@ -14,11 +14,12 @@ class GunMarkerNode : VfxCapableNode {
     }
 
     override func physicsProcess(dt : Double, db : Double){
-        thicknessTween.progress(dt)
+        thicknessTween.progress(dt: dt)
     }
 
     override func Pulse(){
         thicknessTween.startTween()
+        pulseColor(pulseTime: 0.25, color: Color.white, fadeIn: false)
     }
 
     override func draw(in size: CGSize) -> AnyView{
