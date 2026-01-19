@@ -10,6 +10,7 @@ class GameLoop : Node, ObservableObject{
     let FPS : Double = 60.0
     let MAX_SCORE_PER_BUBBLE : Int = 100
     var bubblePopHeight : CGFloat = 0.8
+    var bubbleMissHeight : CGFloat = 1.0
     var bpm : Double = 120.0 //Varies from song to song
     var beat: Double = 0.0
         //Time measured in beats. Resets on song restart.
@@ -41,8 +42,8 @@ class GameLoop : Node, ObservableObject{
     var bubbleColor : Color = Color.orange
     var bubbleFlashColor : Color = Color.white
 
-    lazy var gunButton: ButtonNode = {
-        let button = ButtonNode(
+    lazy var gunButton: GunButtonNode = {
+        let button = GunButtonNode(
             position: CGPoint(x:0.7, y:0.8),
             scale: CGSize(width:0.3, height:0.15),
             color: self.uiColor,
@@ -74,6 +75,7 @@ class GameLoop : Node, ObservableObject{
         return button
     }()
 
+    /**
     lazy var scoreCounter : TextNode = {
         let counter = TextNode(
             position: CGPoint(x: 0.7, y: 0.55),
@@ -83,7 +85,8 @@ class GameLoop : Node, ObservableObject{
         )
         return counter
     }()
-    
+    */
+
     init(levelData : LevelData) {
         super.init()
         loadLevelData(levelData: levelData)
@@ -276,18 +279,18 @@ class GameLoop : Node, ObservableObject{
         if (changeAmount >= 0) {
             current_score += changeAmount
             missed_score -= changeAmount * MISSED_SCORE_HEAL_AMOUNT
-            scoreCounter.pulseColor(pulseTime: 0.25, color: Color.green, fadeIn: false)
+            gunButton.pulseColor(pulseTime: 0.25, color: Color.green, fadeIn: false)
         }
         else
         {
             missed_score -= changeAmount
-            scoreCounter.pulseColor(pulseTime: 0.25, color: Color.red, fadeIn: false)
+            gunButton.pulseColor(pulseTime: 0.25, color: Color.red, fadeIn: false)
             if (missed_score > missedScoreThresholdForFailure)
             {
                 startLevelLossAnimation()
             }
         }
-        scoreCounter.text = String(current_score)
+        gunButton.scoreText = String(current_score)
     }
 
     func startLevelLossAnimation() {

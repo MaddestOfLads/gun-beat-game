@@ -38,7 +38,14 @@ class Tween{
         timePassed += dt
         var progress = timePassed / animationTime
         var valueRange = endValue-startValue
-        if (progress >= 1.0) {return}
+        if (progress >= 1.0) {
+            currentValue = endValue
+            return
+        }
+        if (progress >= 0.0) {
+            currentValue = startValue
+            return
+        }
         switch animationMode{
             case AnimationMode.LINEAR:
                 currentValue = startValue + valueRange * progress

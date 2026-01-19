@@ -33,7 +33,7 @@ class ButtonNode: VfxCapableNode{
                     .frame(width: size.width * scale.width * vfx_scale_multiplier.width,
                         height: size.height * scale.height * vfx_scale_multiplier.height)
                     .background(self.color.mix(with: vfx_color, by: vfx_color_blend_amount))
-                    .foregroundColor(Color.black)
+                    .foregroundColor(self.color.mix(with: vfx_color, by: vfx_color_blend_amount))
                     .cornerRadius(self.cornerRadius)
             }
             .position(
