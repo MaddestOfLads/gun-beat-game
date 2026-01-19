@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 // Class for interpolating (animating) a Double over time, meant to simplify animating a property over time.
 // I made it because   Swift is     Pissing me off and I need it to work like it does in Godot.
 class Tween{
@@ -34,17 +35,21 @@ class Tween{
         // tween should not trigger instantly, so end values are assigned
         self.timePassed = animationTime
         self.currentValue = self.endValue
+        if (animationTime == 0.0){
+            print("Tween animation time cannot be 0, setting to 0.5!")
+            self.animationTime = 0.5
+        }
     }
 
     func update(dt : Double){
         timePassed += dt
-        var progress = timePassed / animationTime
+        var progress = min(max(timePassed / animationTime, 0.0), 1.0)
         var valueRange = endValue-startValue
         if (progress >= 1.0) {
             currentValue = endValue
             return
         }
-        if (progress >= 0.0) {
+        if (progress <= 0.0) {
             currentValue = startValue
             return
         }
@@ -56,15 +61,15 @@ class Tween{
             case AnimationMode.EASE_OUT:
                 currentValue = startValue + valueRange * sin(progress * Double.pi/2)
             case AnimationMode.EASE_IN_OUT:
-                currentValue = endValue - valueRange * sin((0.5-progress) * Double.pi)
+                currentValue = startValue + (0.5 * valueRange) * (1.0 - cos(progress * Double.pi))
             case AnimationMode.SHAKE_ASYMMETRIC:
-                var sawtooth = (progress * shakeCycleCount).truncatingRemainder(dividingBy: 1.0) * shakeCycleCount // 0 to 1, rising linearly and falling sharply
-                var triangle = valueRange * 2.0 * (sawtooth - 2.0 * max(0.5-sawtooth, 0)) // scaled to value range, rising and falling linearly 
-                currentValue = endValue - triangle * (1.0-progress) // same as symmetric but decaying with progress
+                var sawtooth = (progress * shakeCycleCount).truncatingRemainder(dividingBy: 1.0) // 0 to 1, rising linearly and falling sharply
+                var triangle = 1.0 - abs(2.0 * sawtooth - 1.0)
+                currentValue = endValue - valueRange * triangle * (1.0-progress) // same as symmetric but decaying with progress
             case AnimationMode.SHAKE_SYMMETRIC:
-                var sawtooth = (progress * shakeCycleCount).truncatingRemainder(dividingBy: 1.0) * shakeCycleCount
-                var triangle = valueRange * 2.0 * (sawtooth - 2.0 * max(0.5-sawtooth, 0.0))
-                currentValue = endValue - triangle * (1.0-progress) * 2.0 // only difference: this is times 2
+                var sawtooth = (progress * shakeCycleCount).truncatingRemainder(dividingBy: 1.0)
+                var triangle = 1.0 - abs(2.0 * sawtooth - 1.0)
+                currentValue = endValue - valueRange * triangle * (1.0-progress) * 2.0 // only difference: this is times 2
             default:
                 break
         }
@@ -78,5 +83,173 @@ class Tween{
     func startTween() {
         self.timePassed = 0.0
         self.currentValue = self.startValue
+    }
+}
+
+// Tween wrappers for CGPoint, CGSize and Color
+// (AI generated because it's just the same math for every Double with a lot of typing)
+class PointTween {
+    private let xTween: Tween
+    private let yTween: Tween
+    
+    init(
+        animationMode: Tween.AnimationMode = Tween.LINEAR,
+        animationTime: Double = 1.0,
+        startPoint: CGPoint = CGPoint(0.0, 0.0),
+        endPoint: CGPoint = CGPoint(0.0, 0.0),
+        shakeCycleCount: Double = 5.0
+    ) {
+        self.xTween = Tween(
+            animationMode: animationMode,
+            animationTime: animationTime,
+            startValue: Double(startPoint.x),
+            endValue: Double(endPoint.x),
+            shakeCycleCount: shakeCycleCount
+        )
+        
+        self.yTween = Tween(
+            animationMode: animationMode,
+            animationTime: animationTime,
+            startValue: Double(startPoint.y),
+            endValue: Double(endPoint.y),
+            shakeCycleCount: shakeCycleCount
+        )
+    }
+    
+    func update(dt: Double) {
+        xTween.update(dt: dt)
+        yTween.update(dt: dt)
+    }
+    
+    func getValue() -> CGPoint {
+        return CGPoint(
+            x: CGFloat(xTween.getValue()),
+            y: CGFloat(yTween.getValue())
+        )
+    }
+    
+    func startTween() {
+        xTween.startTween()
+        yTween.startTween()
+    }
+}
+
+class SizeTween {
+    private let widthTween: Tween
+    private let heightTween: Tween
+    
+    init(
+        animationMode: Tween.AnimationMode = .LINEAR,
+        animationTime: Double = 1.0,
+        startSize: CGSize = CGWidth(0.0, 0.0),
+        endSize: CGSize = CGWidth(0.0, 0.0),
+        shakeCycleCount: Double = 5.0
+    ) {
+        self.widthTween = Tween(
+            animationMode: animationMode,
+            animationTime: animationTime,
+            startValue: Double(startSize.width),
+            endValue: Double(endSize.width),
+            shakeCycleCount: shakeCycleCount
+        )
+        
+        self.heightTween = Tween(
+            animationMode: animationMode,
+            animationTime: animationTime,
+            startValue: Double(startSize.height),
+            endValue: Double(endSize.height),
+            shakeCycleCount: shakeCycleCount
+        )
+    }
+    
+    func update(dt: Double) {
+        widthTween.update(dt: dt)
+        heightTween.update(dt: dt)
+    }
+    
+    func getValue() -> CGSize {
+        return CGSize(
+            width: CGFloat(widthTween.getValue()),
+            height: CGFloat(heightTween.getValue())
+        )
+    }
+    
+    func startTween() {
+        widthTween.startTween()
+        heightTween.startTween()
+    }
+}
+
+class ColorTween {
+    private let redTween: Tween
+    private let greenTween: Tween
+    private let blueTween: Tween
+    private let alphaTween: Tween
+    
+    init(
+        animationMode: Tween.AnimationMode = .LINEAR,
+        animationTime: Double = 1.0,
+        startColor: Color,
+        endColor: Color,
+        shakeCycleCount: Double = 5.0
+    ) {
+        // Convert SwiftUI Colors to RGB components (0-1 range)
+        let startRGB = startColor.rgbaComponents
+        let endRGB = endColor.rgbaComponents
+        
+        self.redTween = Tween(
+            animationMode: animationMode,
+            animationTime: animationTime,
+            startValue: startRGB.red,
+            endValue: endRGB.red,
+            shakeCycleCount: shakeCycleCount
+        )
+        
+        self.greenTween = Tween(
+            animationMode: animationMode,
+            animationTime: animationTime,
+            startValue: startRGB.green,
+            endValue: endRGB.green,
+            shakeCycleCount: shakeCycleCount
+        )
+        
+        self.blueTween = Tween(
+            animationMode: animationMode,
+            animationTime: animationTime,
+            startValue: startRGB.blue,
+            endValue: endRGB.blue,
+            shakeCycleCount: shakeCycleCount
+        )
+        
+        self.alphaTween = Tween(
+            animationMode: animationMode,
+            animationTime: animationTime,
+            startValue: startRGB.alpha,
+            endValue: endRGB.alpha,
+            shakeCycleCount: shakeCycleCount
+        )
+    }
+    
+    func update(dt: Double) {
+        redTween.update(dt: dt)
+        greenTween.update(dt: dt)
+        blueTween.update(dt: dt)
+        alphaTween.update(dt: dt)
+    }
+    
+    func getValue() -> Color {
+        return Color(
+            red: redTween.getValue(),
+            green: greenTween.getValue(),
+            blue: blueTween.getValue(),
+            opacity: alphaTween.getValue()
+        )
+    }
+    
+    func startTween() {
+        redTween.startTween()
+        greenTween.startTween()
+        blueTween.startTween()
+        alphaTween.startTween()
     }
 }
