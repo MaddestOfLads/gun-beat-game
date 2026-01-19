@@ -53,7 +53,7 @@ class GameLoop : Node, ObservableObject{
             scale: CGSize(width: 0.4, height: 0.01),
             color: self.uiColor
         )
-    }
+    }()
 
     lazy var gunButton: GunButtonNode = {
         let button = GunButtonNode(
@@ -123,7 +123,7 @@ class GameLoop : Node, ObservableObject{
 
     func spawnLevelUI()
     {
-        addChild(gunMarkerNode)
+        addChild(gunMarker)
         addChild(gunButton)
         addChild(pauseButton)
         addChild(restartButton)
@@ -294,8 +294,8 @@ class GameLoop : Node, ObservableObject{
     }
 
     func missBubble(bubble : BubbleNode){
-        removeChild(bubble)
-        changeScore(-MAX_SCORE_PER_BUBBLE)
+        removeChild(child: bubble)
+        changeScore(changeAmount: Float(-MAX_SCORE_PER_BUBBLE))
     }
 
     func togglePause() {
@@ -382,7 +382,7 @@ class GameLoop : Node, ObservableObject{
             level_id: self.level_id,
             total_score: finalScore,
             total_stars : starsAcquired)
-        storeLevelResult(_ result: result, in context: ModelContext)
+        storeLevelResult(result, in context: ModelContext)
         print("Victory!")
     }
 
