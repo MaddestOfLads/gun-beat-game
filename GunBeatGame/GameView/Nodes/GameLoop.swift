@@ -18,6 +18,7 @@ class GameLoop : Node, ObservableObject{
     @Published var isPaused : Bool = false // Published to trigger view updates on pause (because frame won't change duh)
 
     var frameTimer : Timer?
+    var level_id : String = "0"
 
     var packedBubbles : [PackedBubble] = []
     var indexOfNextBubbleToSpawn : Int = 0
@@ -36,6 +37,10 @@ class GameLoop : Node, ObservableObject{
     var level_win_animation_playing : Bool = false
     let LEVEL_WIN_TIME : Double = 2.0
     var level_win_time_left : Double = 2.0
+    var pointsFor1Star : Int = 0
+    var pointsFor2Star : Int = 0
+    var pointsFor3Star : Int = 0
+
     
     var backgroundColor : Color = Color.black
     var uiColor : Color = Color.orange
@@ -174,6 +179,10 @@ class GameLoop : Node, ObservableObject{
         
         self.bpm = levelData.songBPM
         self.missedScoreThresholdForFailure = Float(levelData.missedScoreThresholdForFailure)
+        self.pointsFor1Star = levelData.scoreFor1StarRating
+        self.pointsFor2Star = levelData.scoreFor2StarRating
+        self.pointsFor3Star = levelData.scoreFor3StarRating
+        self.level_id = levelData.id
 
 		// Load bubbles
         for bubble in levelData.bubbles {
@@ -363,7 +372,17 @@ class GameLoop : Node, ObservableObject{
     }
 
     func returnVictorious(){
-        // TODO: make this method return to main menu and update the player database
+        var finalScore : Int = Int(current_score)
+        var starsAcquired : Int = 0
+        if (finalScore >= pointsFor1Star){starsAcquired += 1}
+        if (finalScore >= pointsFor2Star){starsAcquired += 1}
+        if (finalScore >= pointsFor3Star){starsAcquired += 1}
+
+        var result : LevelResult = LevelResult(
+            level_id: self.level_id,
+            total_score: finalScore,
+            total_stars : starsAcquired)
+        storeLevelResult(_ result: result, in context: ModelContext)
         print("Victory!")
     }
 
