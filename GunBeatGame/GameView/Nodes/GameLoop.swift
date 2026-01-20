@@ -23,7 +23,8 @@ class GameLoop : Node, ObservableObject{
     var packedBubbles : [PackedBubble] = []
     var indexOfNextBubbleToSpawn : Int = 0
 
-	var song_player : AVAudioPlayer!
+    var songPlayer: AVAudioPlayer?
+    var onLevelComplete: ((LevelResult) -> Void)?
 
     var current_score : Float = 0
     var missed_score : Float = 0
@@ -50,9 +51,10 @@ class GameLoop : Node, ObservableObject{
     lazy var gunMarker : GunMarkerNode = {
         let marker = GunMarkerNode(
             position: CGPoint(x: 0.3, y: bubblePopHeight),
-            scale: CGSize(width: 0.4, height: 0.01),
-            color: self.uiColor
+            scale: CGSize(width: 0.55, height: 0.01),
+            color: Color.gray
         )
+        return marker
     }()
 
     lazy var gunButton: GunButtonNode = {
@@ -72,6 +74,7 @@ class GameLoop : Node, ObservableObject{
             scale: CGSize(width:0.3, height:0.1),
             color: self.uiColor,
             text: "Pause",
+            systemImageName: "pause.fill",
             onPressed: { self.togglePause() }
         )
         return button
@@ -83,33 +86,42 @@ class GameLoop : Node, ObservableObject{
             scale: CGSize(width:0.3, height:0.1),
             color: self.uiColor,
             text: "Restart",
+            systemImageName: "arrow.clockwise",
             onPressed: { self.startOrRestartSong() }
         )
         return button
     }()
 
-    /**
     lazy var scoreCounter : TextNode = {
         let counter = TextNode(
-            position: CGPoint(x: 0.7, y: 0.55),
-            scale: CGSize(width: 0.2, height: 0.1),
+            position: CGPoint(x: 0.7, y: 0.6),
+            scale: CGSize(width: 0.25, height: 0.08),
             color: self.bubbleColor,
             text: "0"
         )
         return counter
     }()
-    */
 
-    init(levelData : LevelData) {
+    lazy var missFlash: MissFlashNode = {
+        let flash = MissFlashNode()
+        return flash
+    }()
+
+    init(levelData : LevelData, onLevelComplete: ((LevelResult) -> Void)? = nil) {
         super.init()
+        self.onLevelComplete = onLevelComplete
         loadLevelData(levelData: levelData)
         setupAudioSession()
         spawnLevelUI()
         let dt = 1.0 / FPS
         let db = dt * (self.bpm / 60.0)
-        var loadingTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false){_ in
+        _ = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { _ in
             self.startPhysicsProcess(dt: dt, db: db)
         }
+    }
+
+    @MainActor deinit {
+        stopGame()
     }
 
     func startPhysicsProcess(dt: Double, db: Double){
@@ -121,12 +133,21 @@ class GameLoop : Node, ObservableObject{
         }
     }
 
+    func stopGame() {
+        frameTimer?.invalidate()
+        frameTimer = nil
+        songPlayer?.stop()
+        isPaused = true
+    }
+
     func spawnLevelUI()
     {
+        addChild(missFlash)
         addChild(gunMarker)
         addChild(gunButton)
         addChild(pauseButton)
         addChild(restartButton)
+        addChild(scoreCounter)
     }
     
     func setupAudioSession()
@@ -153,13 +174,18 @@ class GameLoop : Node, ObservableObject{
         indexOfNextBubbleToSpawn = 0
         current_score = 0.0
         missed_score = 0.0
+        scoreCounter.text = "0"
 
         print("Playing song")
-        if song_player.isPlaying {
-            song_player.pause()
+        if let songPlayer = songPlayer {
+            if songPlayer.isPlaying {
+                songPlayer.pause()
+            }
+            songPlayer.currentTime = 0.0
+            songPlayer.play()
+        } else {
+            print("Audio player not ready yet.")
         }
-        song_player.currentTime = 0.0
-        song_player.play()
     }
 
 
@@ -168,8 +194,8 @@ class GameLoop : Node, ObservableObject{
         if let url = Bundle.main.url(forResource: levelData.musicAssetName, withExtension: "wav") {
             do {
                 print("Audio file loaded successfully", levelData.musicAssetName)
-                song_player = try AVAudioPlayer(contentsOf: url)
-                song_player.prepareToPlay()
+                songPlayer = try AVAudioPlayer(contentsOf: url)
+                songPlayer?.prepareToPlay()
             } catch {
                 print("AVAudioPlayer init failed:", error)
             }
@@ -184,22 +210,19 @@ class GameLoop : Node, ObservableObject{
         self.pointsFor3Star = levelData.scoreFor3StarRating
         self.level_id = levelData.id
 
-		// Load bubbles
+        // Load bubbles
         for bubble in levelData.bubbles {
-
-            /**
             let r = Double(bubble.color.r) / 255.0
             let g = Double(bubble.color.g) / 255.0
             let b = Double(bubble.color.b) / 255.0
             let c = Color(red: r, green: g, blue: b)
-            */
 
             self.packedBubbles.append(
                 PackedBubble(
                     targetBeat: Double(bubble.targetBeat),
                     speed: Double(bubble.speed),
                     height: Double(bubble.size),
-                    color: self.bubbleColor // Overrides individual bubble color
+                    color: c
                 )
             )
         }
@@ -219,7 +242,12 @@ class GameLoop : Node, ObservableObject{
         frame += 1
         beat += db
         spawnBubbles()
+        checkForMissedBubbles()
         progressLevelLossAnimationIfLost(dt:dt)
+        progressLevelWinAnimationIfWon(dt: dt)
+        if shouldStartVictory() {
+            startLevelWinAnimation()
+        }
     }
     
     //Spawns next bubble if its spawn time has come
@@ -237,12 +265,23 @@ class GameLoop : Node, ObservableObject{
     }
 
     func checkForMissedBubbles() {
-        for child in children{
+        var bubblesToRemove: [BubbleNode] = []
+        for child in children {
             if let bubble = child as? BubbleNode {
-                if (bubble.position.y >= bubbleMissHeight){
-
+                if bubble.isPopped {
+                    if bubble.opacity <= 0 {
+                        bubblesToRemove.append(bubble)
+                    }
+                    continue
+                }
+                if bubble.position.y >= bubbleMissHeight {
+                    bubblesToRemove.append(bubble)
+                    missBubble(bubble: bubble)
                 }
             }
+        }
+        for bubble in bubblesToRemove {
+            removeChild(bubble)
         }
     }
 
@@ -250,10 +289,14 @@ class GameLoop : Node, ObservableObject{
         // if none were hit perfectly: accept the one with the highest score
     // 
     func fireGun() {
+        gunMarker.pulse()
         var bubblesInHitRange : [BubbleNode] = []
         
         for child in children{
             if let bubble = child as? BubbleNode {
+                if bubble.isPopped {
+                    continue
+                }
                 var accuracy : Double = bubble.hitAccuracy(popHeight: CGFloat(bubblePopHeight))
                 if (accuracy > 0.0) {
                     bubblesInHitRange.append(bubble)
@@ -294,19 +337,20 @@ class GameLoop : Node, ObservableObject{
     }
 
     func missBubble(bubble : BubbleNode){
-        removeChild(child: bubble)
         changeScore(changeAmount: Float(-MAX_SCORE_PER_BUBBLE))
     }
 
     func togglePause() {
         if(!isPaused){
             pauseButton.text = "Resume"
+            pauseButton.systemImageName = "play.fill"
             isPaused = true // set after pauseButton text change to trigger a view update
-            song_player.pause()
+            songPlayer?.pause()
         }else{
             pauseButton.text = "Pause"
+            pauseButton.systemImageName = "pause.fill"
             isPaused = false;
-            song_player.play()
+            songPlayer?.play()
         }
     }
 
@@ -315,20 +359,29 @@ class GameLoop : Node, ObservableObject{
             current_score += changeAmount
             missed_score -= changeAmount * MISSED_SCORE_HEAL_AMOUNT
             gunButton.pulseColor(pulseTime: 0.25, color: Color.green, fadeIn: false)
+            scoreCounter.pulseColor(pulseTime: 0.25, color: Color.green, fadeIn: false)
         }
         else
         {
+            current_score = max(0.0, current_score + changeAmount)
             missed_score -= changeAmount
             gunButton.pulseColor(pulseTime: 0.25, color: Color.red, fadeIn: false)
+            scoreCounter.pulseColor(pulseTime: 0.25, color: Color.red, fadeIn: false)
+            missFlash.triggerFlash()
             if (missed_score > missedScoreThresholdForFailure)
             {
                 startLevelLossAnimation()
             }
         }
-        gunButton.scoreText = String(current_score)
+        scoreCounter.text = String(Int(current_score))
     }
 
     func startLevelLossAnimation() {
+        if level_loss_animation_playing {
+            return
+        }
+        level_loss_animation_playing = true
+        level_loss_time_left = LEVEL_LOSS_TIME
         for child in children {
             if let bubble = child as? BubbleNode {
                 bubble.slowing_down = true
@@ -358,13 +411,26 @@ class GameLoop : Node, ObservableObject{
         return true;
     }
 
+    func shouldStartVictory() -> Bool {
+        if level_win_animation_playing || level_loss_animation_playing {
+            return false
+        }
+        return areVictoryCriteriaFulfilled()
+    }
+
     func startLevelWinAnimation(){
-        song_player.stop()
+        if level_win_animation_playing {
+            return
+        }
+        songPlayer?.stop()
         level_win_animation_playing = true
         level_win_time_left = LEVEL_WIN_TIME
     }
 
     func progressLevelWinAnimationIfWon(dt: Double){
+        if !level_win_animation_playing {
+            return
+        }
         level_win_time_left -= dt
         if level_win_time_left <= 0{
             returnVictorious()
@@ -372,18 +438,27 @@ class GameLoop : Node, ObservableObject{
     }
 
     func returnVictorious(){
+        level_win_animation_playing = false
         var finalScore : Int = Int(current_score)
         var starsAcquired : Int = 0
         if (finalScore >= pointsFor1Star){starsAcquired += 1}
         if (finalScore >= pointsFor2Star){starsAcquired += 1}
         if (finalScore >= pointsFor3Star){starsAcquired += 1}
 
-        var result : LevelResult = LevelResult(
+        let result : LevelResult = LevelResult(
             level_id: self.level_id,
             total_score: finalScore,
             total_stars : starsAcquired)
-        storeLevelResult(result, in context: ModelContext)
+        do {
+            try storeLevelResult(result)
+        } catch {
+            print("Failed to store level result:", error)
+        }
         print("Victory!")
+        stopGame()
+        DispatchQueue.main.async {
+            self.onLevelComplete?(result)
+        }
     }
 
     /**

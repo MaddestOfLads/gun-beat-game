@@ -5,9 +5,9 @@
   "songBPM": 200.0,
   "startingAmmo": 6,
   "ammoDivisor": 1,
-  "scoreFor1StarRating": 3000,
-  "scoreFor2StarRating": 3500,
-  "scoreFor3StarRating": 4000,
+  "scoreFor1StarRating": 600,
+  "scoreFor2StarRating": 900,
+  "scoreFor3StarRating": 1200,
   "missedScoreThresholdForFailure": 200,
   "musicAssetName": "awesome funky fight music",
   "backgroundAssetName": "bg_city",
@@ -16,80 +16,122 @@
     {
       "targetBeat": 16.0,
       "size": 0.05,
-      "speed": 0.2,
-      "color": { "r": 0, "g": 0, "b": 255 }
+      "speed": 0.22,
+      "color": { "r": 0, "g": 170, "b": 255 }
     },
     {
       "targetBeat": 18.0,
       "size": 0.05,
-      "speed": 0.2,
-      "color": { "r": 0, "g": 0, "b": 255 }
+      "speed": 0.22,
+      "color": { "r": 255, "g": 120, "b": 0 }
     },
     {
       "targetBeat": 20.0,
       "size": 0.05,
-      "speed": 0.2,
-      "color": { "r": 0, "g": 0, "b": 255 }
+      "speed": 0.22,
+      "color": { "r": 255, "g": 0, "b": 160 }
     },
     {
       "targetBeat": 22.0,
       "size": 0.05,
-      "speed": 0.2,
-      "color": { "r": 0, "g": 0, "b": 255 }
-    },
-    {
-      "targetBeat": 24.0,
-      "size": 0.06,
-      "speed": 0.3,
-      "color": { "r": 0, "g": 0, "b": 255 }
+      "speed": 0.22,
+      "color": { "r": 140, "g": 255, "b": 0 }
     },
     {
       "targetBeat": 25.0,
       "size": 0.06,
-      "speed": 0.3,
-      "color": { "r": 0, "g": 0, "b": 255 }
+      "speed": 0.26,
+      "color": { "r": 90, "g": 200, "b": 255 }
     },
     {
-      "targetBeat": 26.0,
+      "targetBeat": 27.5,
       "size": 0.06,
-      "speed": 0.3,
-      "color": { "r": 0, "g": 0, "b": 255 }
-    },
-    {
-      "targetBeat": 27.0,
-      "size": 0.06,
-      "speed": 0.3,
-      "color": { "r": 0, "g": 0, "b": 255 }
-    },
-    {
-      "targetBeat": 28.0,
-      "size": 0.07,
-      "speed": 0.4,
-      "color": { "r": 0, "g": 0, "b": 255 }
-    },
-    {
-      "targetBeat": 29.0,
-      "size": 0.07,
-      "speed": 0.4,
-      "color": { "r": 0, "g": 0, "b": 255 }
+      "speed": 0.26,
+      "color": { "r": 255, "g": 80, "b": 80 }
     },
     {
       "targetBeat": 30.0,
-      "size": 0.07,
-      "speed": 0.4,
-      "color": { "r": 0, "g": 0, "b": 255 }
+      "size": 0.06,
+      "speed": 0.28,
+      "color": { "r": 255, "g": 220, "b": 0 }
     },
     {
-      "targetBeat": 31.0,
-      "size": 0.07,
-      "speed": 0.4,
-      "color": { "r": 0, "g": 0, "b": 255 }
+      "targetBeat": 32.5,
+      "size": 0.06,
+      "speed": 0.28,
+      "color": { "r": 0, "g": 200, "b": 120 }
     },
     {
-      "targetBeat": 32.0,
+      "targetBeat": 36.0,
       "size": 0.07,
-      "speed": 0.4,
-      "color": { "r": 0, "g": 0, "b": 255 }
+      "speed": 0.32,
+      "color": { "r": 160, "g": 90, "b": 255 }
+    },
+    {
+      "targetBeat": 36.75,
+      "size": 0.05,
+      "speed": 0.32,
+      "color": { "r": 0, "g": 255, "b": 230 }
+    },
+    {
+      "targetBeat": 40.0,
+      "size": 0.06,
+      "speed": 0.3,
+      "color": { "r": 255, "g": 140, "b": 40 }
+    },
+    {
+      "targetBeat": 42.5,
+      "size": 0.06,
+      "speed": 0.3,
+      "color": { "r": 0, "g": 180, "b": 255 }
+    },
+    {
+      "targetBeat": 45.0,
+      "size": 0.06,
+      "speed": 0.34,
+      "color": { "r": 255, "g": 0, "b": 90 }
+    },
+    {
+      "targetBeat": 47.25,
+      "size": 0.07,
+      "speed": 0.34,
+      "color": { "r": 110, "g": 255, "b": 0 }
+    },
+    {
+      "targetBeat": 50.0,
+      "size": 0.07,
+      "speed": 0.36,
+      "color": { "r": 255, "g": 200, "b": 0 }
+    },
+    {
+      "targetBeat": 53.0,
+      "size": 0.06,
+      "speed": 0.34,
+      "color": { "r": 80, "g": 120, "b": 255 }
+    },
+    {
+      "targetBeat": 56.5,
+      "size": 0.07,
+      "speed": 0.36,
+      "color": { "r": 255, "g": 90, "b": 200 }
+    },
+    {
+      "targetBeat": 60.0,
+      "size": 0.07,
+      "speed": 0.32,
+      "color": { "r": 0, "g": 220, "b": 160 }
+    },
+    {
+      "targetBeat": 64.0,
+      "size": 0.06,
+      "speed": 0.3,
+      "color": { "r": 255, "g": 120, "b": 0 }
+    },
+    {
+      "targetBeat": 68.0,
+      "size": 0.07,
+      "speed": 0.3,
+      "color": { "r": 0, "g": 160, "b": 255 }
     }
   ]
 }

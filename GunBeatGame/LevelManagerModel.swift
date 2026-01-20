@@ -72,26 +72,20 @@ func loadLevelData(fileName: String) -> LevelData? {
 func loadAllLevels() -> [LevelData] {
     var levels: [LevelData] = []
 
-    guard let levelsURL = Bundle.main.url(forResource: "Levels", withExtension: nil) else {
-        print("Could not find Levels folder in bundle")
+    let levelFiles = Bundle.main.urls(forResourcesWithExtension: "json", subdirectory: "Levels") ?? []
+    if levelFiles.isEmpty {
+        print("Could not find level JSON files in bundle")
         return []
     }
 
-    do {
-        let contents = try FileManager.default.contentsOfDirectory(at: levelsURL, includingPropertiesForKeys: nil)
-        let jsonFiles = contents.filter { $0.pathExtension == "json" }
+    for file in levelFiles {
+        let fileName = file.deletingPathExtension().lastPathComponent
 
-        for file in jsonFiles {
-            let fileName = file.deletingPathExtension().lastPathComponent
-
-            if let level = loadLevelData(fileName: fileName) {
-                levels.append(level)
-            } else {
-                print("Failed to load level: \(fileName)")
-            }
+        if let level = loadLevelData(fileName: fileName) {
+            levels.append(level)
+        } else {
+            print("Failed to load level: \(fileName)")
         }
-    } catch {
-        print("Error reading Levels directory:", error)
     }
     return levels
 }
@@ -100,30 +94,22 @@ class LevelViewModel: ObservableObject {
     @Published var levels: [LevelData] = []
 
     init() {
-       
         loadLevels()
     }
 
     func loadLevels() {
-        // 1. Look for the file named "1.json" in the main bundle
-        if let url = Bundle.main.url(forResource: "1", withExtension: "json") {
-            do {
-                // 2. Try to read the data
-                let data = try Data(contentsOf: url)
-                let decoder = JSONDecoder()
-                
-                // 3. Decode it into your LevelData structure
-                let level = try decoder.decode(LevelData.self, from: data)
-                
-                // 4. Add it to our list
-                self.levels = [level]
-                print("Success: Loaded level \(level.title)")
-                
-            } catch {
-                print("Error decoding JSON: \(error)")
-            }
+        let loadedLevels = loadAllLevels()
+        if !loadedLevels.isEmpty {
+            self.levels = loadedLevels
+            print("Success: Loaded \(loadedLevels.count) level(s)")
+            return
+        }
+
+        if let fallback = loadLevelData(fileName: "1") {
+            self.levels = [fallback]
+            print("Success: Loaded fallback level \(fallback.title)")
         } else {
-            print("Error: Could not find file '1.json'")
+            print("Error: Could not find any level JSON files")
         }
     }
 }

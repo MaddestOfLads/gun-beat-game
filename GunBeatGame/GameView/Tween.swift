@@ -93,10 +93,10 @@ class PointTween {
     private let yTween: Tween
     
     init(
-        animationMode: Tween.AnimationMode = Tween.LINEAR,
+        animationMode: Tween.AnimationMode = .LINEAR,
         animationTime: Double = 1.0,
-        startPoint: CGPoint = CGPoint(0.0, 0.0),
-        endPoint: CGPoint = CGPoint(0.0, 0.0),
+        startPoint: CGPoint = CGPoint(x: 0.0, y: 0.0),
+        endPoint: CGPoint = CGPoint(x: 0.0, y: 0.0),
         shakeCycleCount: Double = 5.0
     ) {
         self.xTween = Tween(
@@ -141,8 +141,8 @@ class SizeTween {
     init(
         animationMode: Tween.AnimationMode = .LINEAR,
         animationTime: Double = 1.0,
-        startSize: CGSize = CGWidth(0.0, 0.0),
-        endSize: CGSize = CGWidth(0.0, 0.0),
+        startSize: CGSize = CGSize(width: 0.0, height: 0.0),
+        endSize: CGSize = CGSize(width: 0.0, height: 0.0),
         shakeCycleCount: Double = 5.0
     ) {
         self.widthTween = Tween(

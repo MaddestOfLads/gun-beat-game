@@ -12,7 +12,7 @@ import SwiftData
 struct gun_beat_gameApp: App {
     var body: some Scene {
         WindowGroup {
-            GameView(levelData: loadLevelData(fileName: "1.json")!)
+            RootView()
         }
         .modelContainer(for: LevelResultRecord.self)
     }

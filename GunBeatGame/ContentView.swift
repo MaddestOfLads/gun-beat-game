@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 
 // Simple theme (tweak later or move to Asset colors)
 struct Theme {
@@ -31,18 +32,58 @@ struct TitleView: View {
             .overlay(Text("Add Asset named 'logo'")).frame(height: 260)
         }
 
-        NavigationLink {
-          LevelSelectView()
-        } label: {
-          Label("Play", systemImage: "play.fill")
-            .padding(.horizontal, 28).padding(.vertical, 14)
-            .background(Theme.play, in: Capsule())
-            .foregroundStyle(.black)
+        VStack(spacing: 12) {
+          Text("Lock on to the beat, time your shots, and climb the leaderboard.")
+            .font(.headline)
+            .multilineTextAlignment(.center)
+            .foregroundStyle(.white.opacity(0.9))
+
+          NavigationLink {
+            LevelSelectView()
+          } label: {
+            Label("Play", systemImage: "play.fill")
+              .padding(.horizontal, 28).padding(.vertical, 14)
+              .background(Theme.play, in: Capsule())
+              .foregroundStyle(.black)
+          }
+
+          HStack(spacing: 12) {
+            NavigationLink {
+              HowToPlayView()
+            } label: {
+              Label("How to Play", systemImage: "questionmark.circle")
+                .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(.white.opacity(0.2))
+
+            NavigationLink {
+              CreditsView()
+            } label: {
+              Label("Credits", systemImage: "person.3.fill")
+                .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(.white.opacity(0.2))
+          }
         }
 
-        NavigationLink("Credits") { CreditsView() }
-          .buttonStyle(.bordered)
-          .tint(.gray)
+        VStack(alignment: .leading, spacing: 8) {
+          Text("Quick Tips")
+            .font(.headline)
+            .foregroundStyle(.white)
+
+          HStack(spacing: 12) {
+            Label("Shoot on the marker", systemImage: "scope")
+              .frame(maxWidth: .infinity, alignment: .leading)
+            Label("Perfect hits boost stars", systemImage: "star.fill")
+              .frame(maxWidth: .infinity, alignment: .leading)
+          }
+          .font(.subheadline)
+          .foregroundStyle(.white.opacity(0.85))
+        }
+        .padding(16)
+        .background(.white.opacity(0.12), in: RoundedRectangle(cornerRadius: 16))
 
         Spacer()
       }
@@ -60,32 +101,61 @@ struct CreditsView: View {
         ZStack {
             Theme.bg.ignoresSafeArea()
 
-            VStack(spacing: 24) {
-                
-
-                VStack(spacing: 6) {
-                    Text("Aleksander Muszyński")
-                    Text("Nicola Secci")
-                    Text("Efran Fernandez")
-                }
-                .foregroundStyle(.white.opacity(0.9))
-
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(.white.opacity(0.2))
-                    .frame(height: 180)
-                    .overlay(
-                        Image(systemName: "play.circle")
-                            .font(.system(size: 48))
-                            .foregroundStyle(.white.opacity(0.8))
-                    )
-
-                //Text that shows how many times Credits was opened
-                Text("You have opened this screen \(openCount) times")
+            ScrollView {
+                VStack(spacing: 24) {
+                    VStack(spacing: 8) {
+                        Text("Gun Beat Game")
+                            .font(.title2.bold())
+                        Text("A rhythm shooter built for fast, satisfying runs.")
+                            .multilineTextAlignment(.center)
+                            .foregroundStyle(.white.opacity(0.85))
+                    }
                     .foregroundStyle(.white)
 
-                Spacer()
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Team")
+                            .font(.headline)
+                        VStack(alignment: .leading, spacing: 6) {
+                            Label("Aleksander Muszyński", systemImage: "pencil.and.outline")
+                            Label("Nicola Secci", systemImage: "hammer.fill")
+                            Label("Efran Fernandez ", systemImage: "waveform")
+                        }
+                        .foregroundStyle(.white.opacity(0.9))
+                        .font(.subheadline)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(16)
+                    .background(.white.opacity(0.12), in: RoundedRectangle(cornerRadius: 16))
+
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Music")
+                            .font(.headline)
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(.white.opacity(0.2))
+                            .frame(height: 160)
+                            .overlay(
+                                VStack(spacing: 8) {
+                                    Image(systemName: "music.note.list")
+                                        .font(.system(size: 32))
+                                    Text("Music is built with open-source tracks and samples.")
+                                        .font(.footnote)
+                                        .multilineTextAlignment(.center)
+                                        .foregroundStyle(.white.opacity(0.85))
+                                }
+                            )
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(16)
+                    .background(.white.opacity(0.12), in: RoundedRectangle(cornerRadius: 16))
+
+                    //Text that shows how many times Credits was opened
+                    Text("You have opened this screen \(openCount) times")
+                        .foregroundStyle(.white.opacity(0.8))
+
+                    Spacer(minLength: 12)
+                }
+                .padding(24)
             }
-            .padding(24)
             .navigationTitle("Credits")
             .navigationBarTitleDisplayMode(.inline)
             .onAppear {
@@ -113,36 +183,59 @@ let demoLevels: [Level] = [
 struct LevelSelectView: View {
   // Connect the View Model
   @StateObject var viewModel = LevelViewModel()
+  @Query(sort: \LevelResultRecord.created_at, order: .reverse) private var levelResults: [LevelResultRecord]
 
   var body: some View {
     ZStack {
       Theme.bg.ignoresSafeArea()
       
       ScrollView {
-        LazyVStack(spacing: 16) {
-          
-          // Loop over the REAL levels from the JSON
-          ForEach(viewModel.levels) { level in
-            LevelCard(level: level)
+        VStack(alignment: .leading, spacing: 16) {
+          VStack(alignment: .leading, spacing: 8) {
+            Text("Choose your track")
+              .font(.title3.bold())
+              .foregroundStyle(.white)
+            Text("Each level syncs bubbles to the song BPM. Find your rhythm and aim for perfect hits.")
+              .font(.subheadline)
+              .foregroundStyle(.white.opacity(0.8))
           }
-          
+
+          LazyVStack(spacing: 16) {
+            // Loop over the REAL levels from the JSON
+            ForEach(viewModel.levels) { level in
+              LevelCard(level: level, rating: bestStars(for: level.id))
+            }
+          }
         }
         .padding(16)
       }
       .navigationTitle("Level select")
     }
   }
+
+  private func bestStars(for levelId: String) -> Int {
+    levelResults
+      .filter { $0.level_id == levelId }
+      .map { $0.total_stars }
+      .max() ?? 0
+  }
 }
 
 struct LevelCard: View {
   let level: LevelData
+  let rating: Int
     
   var body: some View {
     HStack(spacing: 12) {
       // Thumbnail
-      RoundedRectangle(cornerRadius: 12)
-        .fill(.white.opacity(0.7))
-        .frame(width: 120, height: 80)
+      ZStack {
+        RoundedRectangle(cornerRadius: 12)
+          .fill(.white.opacity(0.7))
+          .frame(width: 120, height: 80)
+        Image(systemName: "waveform.path.ecg")
+          .font(.system(size: 28, weight: .bold))
+          .foregroundStyle(.pink.opacity(0.9))
+      }
         
 
       VStack(alignment: .leading, spacing: 6) {
@@ -156,7 +249,7 @@ struct LevelCard: View {
               .foregroundStyle(.black)
           
         
-        Stars(rating: 3)
+        Stars(rating: rating)
       }
       Spacer()
 
@@ -184,6 +277,80 @@ struct Stars: View {
     }
     .foregroundStyle(.orange)
     .font(.footnote)
+  }
+}
+
+// ========== 3.5) HOW TO PLAY ==========
+struct HowToPlayView: View {
+  var body: some View {
+    ZStack {
+      Theme.bg.ignoresSafeArea()
+
+      ScrollView {
+        VStack(alignment: .leading, spacing: 16) {
+          Text("How to Play")
+            .font(.title2.bold())
+            .foregroundStyle(.white)
+
+          InstructionCard(
+            title: "Hit the beat",
+            systemImage: "scope",
+            description: "Wait for bubbles to cross the marker, then fire to score. Timing is everything."
+          )
+          InstructionCard(
+            title: "Watch your ammo",
+            systemImage: "rectangle.stack.fill",
+            description: "The ammo meter shows loaded shots. Missing drains score—stay sharp."
+          )
+          InstructionCard(
+            title: "Chase stars",
+            systemImage: "star.circle.fill",
+            description: "Perfect hits build your streak. Higher scores unlock more stars per level."
+          )
+
+          VStack(alignment: .leading, spacing: 8) {
+            Text("Controls")
+              .font(.headline)
+              .foregroundStyle(.white)
+            Text("Tap the gun button to fire. Use the pause icon to stop and the restart icon to reset the song.")
+              .font(.subheadline)
+              .foregroundStyle(.white.opacity(0.8))
+          }
+          .padding(16)
+          .background(.white.opacity(0.12), in: RoundedRectangle(cornerRadius: 16))
+        }
+        .padding(24)
+      }
+    }
+    .navigationTitle("How to Play")
+    .navigationBarTitleDisplayMode(.inline)
+  }
+}
+
+struct InstructionCard: View {
+  let title: String
+  let systemImage: String
+  let description: String
+
+  var body: some View {
+    HStack(spacing: 12) {
+      Image(systemName: systemImage)
+        .font(.system(size: 28))
+        .frame(width: 44, height: 44)
+        .background(.white.opacity(0.2), in: RoundedRectangle(cornerRadius: 12))
+        .foregroundStyle(.white)
+
+      VStack(alignment: .leading, spacing: 4) {
+        Text(title)
+          .font(.headline)
+          .foregroundStyle(.white)
+        Text(description)
+          .font(.subheadline)
+          .foregroundStyle(.white.opacity(0.85))
+      }
+    }
+    .padding(16)
+    .background(.white.opacity(0.12), in: RoundedRectangle(cornerRadius: 16))
   }
 }
 
