@@ -29,7 +29,7 @@ final class LevelResultRecord {
 private enum _LevelResultStorage {
     // Lazily create a ModelContainer for LevelResultRecord
     static let container: ModelContainer = {
-        // If container creation fails, it's a programmer error; crash early to surface misconfiguration
+    
         let container = try! ModelContainer(for: LevelResultRecord.self)
         return container
     }()
@@ -37,8 +37,7 @@ private enum _LevelResultStorage {
     static var context: ModelContext { ModelContext(container) }
 }
 
-func storeLevelResult(_ result: LevelResult) throws {
-    let context = _LevelResultStorage.context
+func storeLevelResult(_ result: LevelResult, context: ModelContext) throws {
     let record = LevelResultRecord(
         level_id: result.level_id,
         total_score: result.total_score,
@@ -46,4 +45,8 @@ func storeLevelResult(_ result: LevelResult) throws {
     )
     context.insert(record)
     try context.save()
+}
+
+func storeLevelResult(_ result: LevelResult) throws {
+    try storeLevelResult(result, context: _LevelResultStorage.context)
 }

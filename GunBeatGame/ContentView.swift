@@ -46,6 +46,7 @@ struct TitleView: View {
               .background(Theme.play, in: Capsule())
               .foregroundStyle(.black)
           }
+          .accessibilityIdentifier("playButton")
 
           HStack(spacing: 12) {
             NavigationLink {
@@ -56,6 +57,7 @@ struct TitleView: View {
             }
             .buttonStyle(.borderedProminent)
             .tint(.white.opacity(0.2))
+            .accessibilityIdentifier("howToPlayButton")
 
             NavigationLink {
               CreditsView()
@@ -65,6 +67,7 @@ struct TitleView: View {
             }
             .buttonStyle(.borderedProminent)
             .tint(.white.opacity(0.2))
+            .accessibilityIdentifier("creditsButton")
           }
         }
 
@@ -116,9 +119,9 @@ struct CreditsView: View {
                         Text("Team")
                             .font(.headline)
                         VStack(alignment: .leading, spacing: 6) {
-                            Label("Aleksander Muszyński", systemImage: "pencil.and.outline")
-                            Label("Nicola Secci", systemImage: "hammer.fill")
-                            Label("Efran Fernandez ", systemImage: "waveform")
+                            Label("Aleksander Muszyński — Game Design", systemImage: "pencil.and.outline")
+                            Label("Nicola Secci — Engineering", systemImage: "hammer.fill")
+                            Label("Efran Fernandez — Audio + UX", systemImage: "waveform")
                         }
                         .foregroundStyle(.white.opacity(0.9))
                         .font(.subheadline)
@@ -195,6 +198,7 @@ struct LevelSelectView: View {
             Text("Choose your track")
               .font(.title3.bold())
               .foregroundStyle(.white)
+              .accessibilityIdentifier("levelSelectTitle")
             Text("Each level syncs bubbles to the song BPM. Find your rhythm and aim for perfect hits.")
               .font(.subheadline)
               .foregroundStyle(.white.opacity(0.8))
@@ -211,13 +215,14 @@ struct LevelSelectView: View {
       }
       .navigationTitle("Level select")
     }
+    .accessibilityIdentifier("levelSelectView")
+    .accessibilityElement(children: .contain)
   }
 
   private func bestStars(for levelId: String) -> Int {
     levelResults
-      .filter { $0.level_id == levelId }
-      .map { $0.total_stars }
-      .max() ?? 0
+      .first { $0.level_id == levelId }?
+      .total_stars ?? 0
   }
 }
 
@@ -291,6 +296,7 @@ struct HowToPlayView: View {
           Text("How to Play")
             .font(.title2.bold())
             .foregroundStyle(.white)
+            .accessibilityIdentifier("howToPlayTitle")
 
           InstructionCard(
             title: "Hit the beat",
@@ -324,6 +330,7 @@ struct HowToPlayView: View {
     }
     .navigationTitle("How to Play")
     .navigationBarTitleDisplayMode(.inline)
+    .accessibilityIdentifier("howToPlayView")
   }
 }
 

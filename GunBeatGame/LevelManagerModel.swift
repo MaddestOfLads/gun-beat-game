@@ -42,17 +42,17 @@ struct RGBColor: Codable {
 
 
 
-func loadLevelData(fileName: String) -> LevelData? {
+func loadLevelData(fileName: String, bundle: Bundle = .main) -> LevelData? {
     let clean = fileName.replacingOccurrences(of: ".json", with: "")
 
     let candidates: [URL?] = [
-        Bundle.main.url(forResource: clean, withExtension: "json", subdirectory: "Levels"),
-        Bundle.main.url(forResource: clean, withExtension: "json")
+        bundle.url(forResource: clean, withExtension: "json", subdirectory: "Levels"),
+        bundle.url(forResource: clean, withExtension: "json")
     ]
 
     guard let url = candidates.compactMap({ $0 }).first else {
-        let inLevels = Bundle.main.urls(forResourcesWithExtension: "json", subdirectory: "Levels") ?? []
-        let inRoot   = Bundle.main.urls(forResourcesWithExtension: "json", subdirectory: nil) ?? []
+        let inLevels = bundle.urls(forResourcesWithExtension: "json", subdirectory: "Levels") ?? []
+        let inRoot   = bundle.urls(forResourcesWithExtension: "json", subdirectory: nil) ?? []
         print("❌ Could not find \(clean).json")
         print("JSON in Levels:", inLevels.map { $0.lastPathComponent })
         print("JSON in root:", inRoot.map { $0.lastPathComponent })
@@ -69,10 +69,10 @@ func loadLevelData(fileName: String) -> LevelData? {
 }
 
 
-func loadAllLevels() -> [LevelData] {
+func loadAllLevels(bundle: Bundle = .main) -> [LevelData] {
     var levels: [LevelData] = []
 
-    let levelFiles = Bundle.main.urls(forResourcesWithExtension: "json", subdirectory: "Levels") ?? []
+    let levelFiles = bundle.urls(forResourcesWithExtension: "json", subdirectory: "Levels") ?? []
     if levelFiles.isEmpty {
         print("Could not find level JSON files in bundle")
         return []
@@ -81,7 +81,7 @@ func loadAllLevels() -> [LevelData] {
     for file in levelFiles {
         let fileName = file.deletingPathExtension().lastPathComponent
 
-        if let level = loadLevelData(fileName: fileName) {
+        if let level = loadLevelData(fileName: fileName, bundle: bundle) {
             levels.append(level)
         } else {
             print("Failed to load level: \(fileName)")
@@ -92,20 +92,22 @@ func loadAllLevels() -> [LevelData] {
 
 class LevelViewModel: ObservableObject {
     @Published var levels: [LevelData] = []
+    private let bundle: Bundle
 
-    init() {
+    init(bundle: Bundle = .main) {
+        self.bundle = bundle
         loadLevels()
     }
 
     func loadLevels() {
-        let loadedLevels = loadAllLevels()
+        let loadedLevels = loadAllLevels(bundle: bundle)
         if !loadedLevels.isEmpty {
             self.levels = loadedLevels
             print("Success: Loaded \(loadedLevels.count) level(s)")
             return
         }
 
-        if let fallback = loadLevelData(fileName: "1") {
+        if let fallback = loadLevelData(fileName: "1", bundle: bundle) {
             self.levels = [fallback]
             print("Success: Loaded fallback level \(fallback.title)")
         } else {

@@ -29,9 +29,41 @@
 		A1048AC02E9EA74C003508CD /* GunBeatGameUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GunBeatGameUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		303459902F2518120048F6B2 /* Exceptions for "GunBeatGame" folder in "GunBeatGame" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				gun_beat_gameTests/LevelManagerBasicTests.swift,
+				gun_beat_gameTests/UserDataModelTests.swift,
+				gun_beat_gameUITests/UITests.swift,
+			);
+			target = A1048AA82E9EA747003508CD /* GunBeatGame */;
+		};
+		303459922F2518170048F6B2 /* Exceptions for "GunBeatGame" folder in "GunBeatGameUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				gun_beat_gameUITests/UITests.swift,
+			);
+			target = A1048ABF2E9EA74C003508CD /* GunBeatGameUITests */;
+		};
+		30C3F6F32F261F760025D1A2 /* Exceptions for "GunBeatGame" folder in "GunBeatGameTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				gun_beat_gameTests/LevelManagerBasicTests.swift,
+				gun_beat_gameTests/UserDataModelTests.swift,
+			);
+			target = A1048AB52E9EA74C003508CD /* GunBeatGameTests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		A1048AAB2E9EA747003508CD /* GunBeatGame */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				303459902F2518120048F6B2 /* Exceptions for "GunBeatGame" folder in "GunBeatGame" target */,
+				30C3F6F32F261F760025D1A2 /* Exceptions for "GunBeatGame" folder in "GunBeatGameTests" target */,
+				303459922F2518170048F6B2 /* Exceptions for "GunBeatGame" folder in "GunBeatGameUITests" target */,
+			);
 			path = GunBeatGame;
 			sourceTree = "<group>";
 		};
